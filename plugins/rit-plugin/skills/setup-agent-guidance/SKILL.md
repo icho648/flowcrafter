@@ -2,22 +2,29 @@
 name: setup-agent-guidance
 description: >-
   Initialize or refresh durable project agent guidance by detecting AGENTS.md and
-  CLAUDE.md, installing a progressive workflow and localized PLANS.md, then scanning
-  the repository and asking the user before generating project-specific rules and
-  code_review.md. Use when the user asks to initialize, bootstrap, generate,
-  customize, or refresh project agent instructions, AGENTS.md, CLAUDE.md,
-  execution-plan guidance, testing standards, or code-review policy. Do not use for
-  ordinary feature implementation after guidance is already current. Localized
-  triggers: references/triggers.zh-CN.md.
+  CLAUDE.md, installing a slim delta-oriented core plus localized PLANS.md, then
+  scanning the repository and asking the user before generating project-specific
+  rules and optional code_review.md. Use when the user asks to initialize,
+  bootstrap, generate, customize, or refresh project agent instructions,
+  AGENTS.md, CLAUDE.md, execution-plan guidance, testing standards, or
+  code-review policy. Do not use for ordinary feature implementation after
+  guidance is already current. Localized triggers: references/triggers.zh-CN.md.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # Set Up Project Agent Guidance
 
-Complete setup in two phases: first install generic rules that require no project-specific judgment, then use a read-only scan and user confirmation to generate project-specific guidance. Use the agent's own file tools; do not depend on bundled scripts or an additional runtime.
+Complete setup in two phases: first install a **slim generic core** that tells agents to trust harness defaults and write only repository deltas, then use a read-only scan and user confirmation to generate project-specific guidance. Use the agent's own file tools; do not depend on bundled scripts or an additional runtime.
+
+## Design intent
+
+- Prefer **short, high-signal** guidance over restating habits already internalized by modern models and Cursor harness (planning depth, verify-before-done, root-cause debugging, etc.).
+- `AGENTS.md` / `CLAUDE.md` should answer: **what is different in this repo?**
+- Keep `PLANS.md` available for rare, long-running written ExecPlans; do not teach a full “gearbox” taxonomy in every target repo.
+- `code_review.md` is **optional**: create it only when the repo has real review/CI gates worth encoding.
 
 ## Select the working language
 
@@ -52,12 +59,13 @@ Read the selected `assets/AGENTS.<locale>.template.md` and every target instruct
 - When markers are missing, reversed, or duplicated, stop modifying that file and report the problem. Do not guess a repair.
 - Preserve all content outside the managed block and preserve the predominant newline style.
 - If a legacy `workflow-gearbox:start/end` block exists and both markers are complete and unique, remove it before installing the new Core. If the old markers are malformed, stop and report.
+- If an older verbose Core (for example a full G1–G4 “workflow gearbox”) is present under current markers, treat any version `< 1.1.0` or unknown as upgradeable to the slim Core.
 
 Then inspect repository-root `PLANS.md`:
 
 - When it exists, preserve it completely; do not compare, merge, or overwrite it.
 - When it does not exist, install `assets/PLANS.<locale>.md` verbatim as root `PLANS.md`. Do not rewrite, summarize, or translate it again.
-- Do not create an empty task ExecPlan. Create one only when an agent selects G3 for an actual task.
+- Do not create an empty task ExecPlan. Create one only when a real task needs a cross-session written plan.
 
 After phase one, reread the results. Confirm that every target contains exactly one pair of Core markers, outside content remains present, and `PLANS.md` was preserved or installed correctly.
 
@@ -69,12 +77,13 @@ Read `references/project-onboarding.<locale>.md`, the project block in `assets/A
 2. Show concise findings and ask only high-impact preferences that cannot be determined from the repository. Prefer a structured question tool when available; otherwise ask short direct questions.
 3. From the answers, draft:
    - an `agent-guidance:project` block for each target instruction file;
-   - repository-root `code_review.md`.
+   - repository-root `code_review.md` **only when** there are concrete CI/review gates or the user explicitly wants a review doc.
 4. Strip every placeholder and generation note from the drafted content. In `code_review.md`, also remove scaffold headings such as "Project quality gates" when no confirmed command exists for that row. Do not copy the template's placeholders into a target repository.
-5. Show the proposed content or diff and obtain explicit user confirmation before writing.
-6. If the user defers onboarding, stop phase two, preserve phase-one changes, and do not create a generic `code_review.md`.
+5. In the project block, write **deltas only**: collaboration norms, directory layout, forbidden actions, concrete commands. Omit advice the harness already enforces by default.
+6. Show the proposed content or diff and obtain explicit user confirmation before writing.
+7. If the user defers onboarding, stop phase two, preserve phase-one changes, and do not create a generic `code_review.md`.
 
-Treat an existing `agent-guidance:project` block or `code_review.md` as user-owned project policy: propose diffs and never overwrite without confirmation. After generating `code_review.md`, the project block must require agents to read it completely for code review and pre-completion review.
+Treat an existing `agent-guidance:project` block or `code_review.md` as user-owned project policy: propose diffs and never overwrite without confirmation. After generating `code_review.md`, the project block must require agents to read it completely for code review and pre-completion review. If there is no `code_review.md`, omit that requirement.
 
 ## Validate and report
 
@@ -87,6 +96,7 @@ Confirm:
 - `PLANS.md` and an existing `code_review.md` were not silently overwritten.
 - Commands in the project block are supported by repository evidence.
 - A repeated run proposes only necessary differences and never appends duplicate blocks.
+- Generated guidance does not restate generic harness habits at length.
 
 Report which files were created, updated, preserved, or skipped, plus any decisions still requiring a human.
 
