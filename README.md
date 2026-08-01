@@ -6,7 +6,7 @@
 
 [简体中文](README.zh-CN.md)
 
-A Claude Code and Codex marketplace for crafted Agent workflows. Add `flowcrafter` once, then install Rit’s personal workflow bundle, the PRD delivery workflow, or both.
+A Claude Code and Codex marketplace for crafted Agent workflows. Add `flowcrafter` once, then install Rit’s personal workflow bundle, the PRD delivery workflow, the Symphony Workflow harness-audit plugin, or any combination.
 
 ## Plugins
 
@@ -14,6 +14,7 @@ A Claude Code and Codex marketplace for crafted Agent workflows. Add `flowcrafte
 | --- | --- | --- |
 | [rit-plugin](plugins/rit-plugin/) | `setup-agent-guidance`, `grounded-explainer`, `learn` | Rit’s project-guidance, explanation, and learning workflows share one personal bundle. |
 | [prd-workflow](plugins/prd-workflow/) | `write-prd`, `implement-prd`, `review-prd-implementation` | Implementation has a hard dependency on the review loop, so the PRD skills install together. |
+| [symphony-workflow](plugins/symphony-workflow/) | `harness-audit` | Repo-local Agent Harness auditing and workflow guardrails. |
 
 The GitHub repository name and Marketplace ID are both `flowcrafter`.
 
@@ -25,9 +26,10 @@ The GitHub repository name and Marketplace ID are both `flowcrafter`.
 codex plugin marketplace add icho648/flowcrafter
 codex plugin add rit-plugin@flowcrafter
 codex plugin add prd-workflow@flowcrafter
+codex plugin add symphony-workflow@flowcrafter
 ```
 
-Install either plugin or both. Start a new Codex task afterward so the selected skills are discovered.
+Install any plugin or combination. Start a new Codex task afterward so the selected skills are discovered.
 
 ### Claude Code
 
@@ -35,13 +37,14 @@ Install either plugin or both. Start a new Codex task afterward so the selected 
 claude plugin marketplace add icho648/flowcrafter
 claude plugin install rit-plugin@flowcrafter
 claude plugin install prd-workflow@flowcrafter
+claude plugin install symphony-workflow@flowcrafter
 ```
 
 Restart Claude Code after installation. Claude Code invocations are namespaced, for example `/rit-plugin:learn` and `/prd-workflow:write-prd`; Codex invokes the same skills as `$learn` and `$write-prd`.
 
 ### Migrate from `icho648-skills`
 
-The former Marketplace ID and all-in-one plugin are replaced by `flowcrafter` and two focused plugins:
+The former Marketplace ID and all-in-one plugin are replaced by `flowcrafter` and focused plugins:
 
 ```bash
 # Codex
@@ -50,6 +53,7 @@ codex plugin marketplace remove icho648-skills
 codex plugin marketplace add icho648/flowcrafter
 codex plugin add rit-plugin@flowcrafter
 codex plugin add prd-workflow@flowcrafter
+codex plugin add symphony-workflow@flowcrafter
 ```
 
 ```bash
@@ -59,6 +63,7 @@ claude plugin marketplace remove icho648-skills
 claude plugin marketplace add icho648/flowcrafter
 claude plugin install rit-plugin@flowcrafter
 claude plugin install prd-workflow@flowcrafter
+claude plugin install symphony-workflow@flowcrafter
 ```
 
 Skip any removal command for an item that was not installed.
@@ -81,11 +86,14 @@ When installing `implement-prd` manually, also install `review-prd-implementatio
 │   │       ├── setup-agent-guidance/
 │   │       ├── grounded-explainer/
 │   │       └── learn/
-│   └── prd-workflow/
+│   ├── prd-workflow/
+│   │   └── skills/
+│   │       ├── write-prd/
+│   │       ├── implement-prd/
+│   │       └── review-prd-implementation/
+│   └── symphony-workflow/
 │       └── skills/
-│           ├── write-prd/
-│           ├── implement-prd/
-│           └── review-prd-implementation/
+│           └── harness-audit/
 ├── .github/                              # validation and release workflows
 ├── tests/                                # validator regression tests
 └── AGENTS.md                             # Marketplace maintenance policy

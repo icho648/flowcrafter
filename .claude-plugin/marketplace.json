@@ -47,6 +47,24 @@
         "acceptance",
         "specification"
       ]
+    },
+    {
+      "name": "symphony-workflow",
+      "description": "Repo-local Agent Harness auditing and workflow guardrails for reliable Agent execution.",
+      "source": "./plugins/symphony-workflow",
+      "category": "productivity",
+      "homepage": "https://github.com/icho648/flowcrafter/tree/main/plugins/symphony-workflow",
+      "author": {
+        "name": "icho648"
+      },
+      "keywords": [
+        "symphony",
+        "agent-workflow",
+        "harness",
+        "documentation",
+        "checks",
+        "drift"
+      ]
     }
   ]
 }
