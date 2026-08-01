@@ -1,108 +1,108 @@
-# Harness Audit — Reference
+# Harness 审计 — 参考
 
-## Article → practice map
+## 文章到实践的映射
 
-From [Harness Engineering](https://openai.com/index/harness-engineering/):
+来自 [Harness Engineering](https://openai.com/index/harness-engineering/)：
 
-| Article idea | Practice |
+| 文章观点 | 实践 |
 |---|---|
-| Humans steer; agents execute | Human designs environment + feedback; agent writes code/docs/fixes |
-| Repo as system of record | No SoR in chat/Docs/brain; version in Git |
-| AGENTS.md as TOC | Short map; progressive disclosure into `docs/` |
-| Linters/CI on knowledge | Structure, cross-links, freshness as failing checks |
-| Doc-gardening agent | Periodic scan → fix PRs (after checks exist) |
-| Agent-readable systems | Logs/UI/checks reachable without human copy-paste |
-| Architecture invariants | Allowed dependency edges; structural tests |
-| Taste in tools | Review preferences → docs or lint with fix hints |
-| Throughput changes merge gates | Only when agent fix cost << wait cost |
-| Entropy / GC | Encode golden rules; small continuous cleanup PRs |
-| Autonomy is encoded | Tests, review, recovery in-repo unlock E2E agent loops |
+| 人来引导，Agent 来执行 | 人设计环境和反馈；Agent 编写代码、文档和修复 |
+| 仓库是事实源 | 不把聊天、文档外部副本或大脑当作事实源；在 Git 中版本化 |
+| AGENTS.md 是目录 | 保持地图简短，通过 docs/ 渐进披露 |
+| 知识上的 Linter/CI | 把结构、交叉链接和新鲜度变成失败检查 |
+| 文档整理 Agent | 已有检查后，定期扫描并创建修复 PR |
+| Agent 可读系统 | 日志、UI 和检查可以被 Agent 直接访问，不依赖人复制粘贴 |
+| 架构不变量 | 允许的依赖边界和结构测试 |
+| 将偏好写入工具 | 把评审偏好写入文档或带修复提示的 Linter |
+| 吞吐量改变合并门禁 | 只有 Agent 修复成本远低于等待成本时，才减少门禁 |
+| 熵 / GC | 编码黄金规则，持续创建小型清理 PR |
+| 自治来自编码 | 测试、评审和恢复流程在仓库内，才能支持端到端 Agent 闭环 |
 
-## Evidence discipline
+## 证据纪律
 
-Use the strongest label supported by the evidence:
+使用证据能够支持的最强标签：
 
-| Label | Use when |
+| 标签 | 使用条件 |
 |---|---|
-| **Observed** | A file, command result, test, CI run, or human decision directly shows it. |
-| **Inferred** | Source or structure supports it, but the behavior was not executed. |
-| **Declared** | Documentation states an intent or decision. |
-| **Not verified** | Runtime, CI, deployment, credentials, external services, or human acceptance were not checked. |
+| **已观察（Observed）** | 文件、命令结果、测试、CI 运行或人的决定直接证明了它。 |
+| **已推断（Inferred）** | 源码或结构支持它，但还没有执行验证该行为。 |
+| **已声明（Declared）** | 文档表达了一个意图或决定。 |
+| **未验证（Not verified）** | 尚未检查运行时、CI、部署、凭据、外部服务或人的验收。 |
 
-Do not promote a claim from static evidence to runtime or business correctness.
-Mocks, builds, inventories, clean diffs, and agent-written assertions are not
-independent proof of those outcomes.
+不要把静态证据升级为运行时正确性或业务正确性。Mock、构建、清单、干净 Diff
+和 Agent 编写的断言，都不是这些结果的独立证明。
 
-## Drift signals
+## 漂移信号
 
-Treat as drift when **observable**, not when "feels messy":
+只有在信号可观察时才视为漂移，不要因为“感觉很乱”就下结论：
 
-1. **Doc ≠ reality** — Accepted design with no implementation path; ARCHITECTURE still docs-only after app code lands.
-2. **Broken navigation** — Index/AGENTS links 404; routes to deleted leaves.
-3. **Status lies** — Plan language claims verified; unverified treated as done.
-4. **Repeated violation** — Same failure class under the same harness revision ≥2 times.
-5. **Pattern copying** — New files imitate a deprecated layout or bypass checks.
-6. **Check bypass** — Lint disabled to merge; rules written but never wired to CI.
+1. **文档不等于现实**：已接受的设计没有实现路径；应用代码已经存在，但 ARCHITECTURE
+   仍停留在只有文档的状态。
+2. **导航损坏**：索引或 AGENTS.md 链接返回 404，或指向已删除的叶子文档。
+3. **状态虚假**：计划语言声称已验证，把未验证内容叙述成已完成。
+4. **重复违规**：同一 Harness 版本下，同一类失败至少出现 2 次。
+5. **模式复制**：新文件模仿已废弃布局或绕过检查。
+6. **检查被绕过**：为了合并而禁用 Lint；规则已经写出，却从未接入 CI。
 
-### Drift response
+### 漂移响应
 
-```text
-Signal
-  → Is it execution noise or rule/structure stale?
-  → Same pattern repeating? → prefer encode (doc or check)
-  → One-off? → fix instance; don't add rules yet
-  → Rule with no signal ever? → delete
-```
+信号
+  → 是执行噪声，还是规则/结构已经陈旧？
+  → 同一模式是否重复？→ 优先 encode（文档或检查）
+  → 只出现一次？→ 修复当前实例，不要马上加规则
+  → 规则从未对应任何信号？→ 删除
 
-## What "linter / CI for docs" means
+## “文档 Linter / CI”是什么意思
 
-| Check type | Question | Example failure |
+| 检查类型 | 要回答的问题 | 失败示例 |
 |---|---|---|
-| Structure | Required shape present? | Missing partition `index.md` |
-| Cross-links | References resolve? | `AGENTS.md` → missing path |
-| Freshness | Claims still true? | Active plan with no progress; generated file hand-edited as SoR |
+| 结构 | 所需形状是否存在？ | 缺少分区 index.md |
+| 交叉链接 | 引用是否可解析？ | AGENTS.md 指向不存在的路径 |
+| 新鲜度 | 声明是否仍然成立？ | 没有进展的活跃计划；生成文件被手工当作事实源维护 |
 
-These are smoke alarms for the knowledge base—not quality scores.
+这些是知识库的烟雾报警器，不是质量评分。
 
-## What "invariants not micro-management" means
+## “不变量而不是微观管理”是什么意思
 
-- **Invariant:** "UI must not import Repo; go through Service/Provider."
-- **Not invariant:** "You must use library X for parsing."
+- **不变量**：“UI 不能导入 Repo，必须经过 Service/Provider。”
+- **不是不变量**：“必须使用某个库来解析。”
 
-Central platform enforces boundaries; local expression stays free. Lint messages should tell the agent **how to comply**.
+中心平台负责约束边界，局部实现保持自由。Lint 信息要告诉 Agent 如何符合规则。
 
-## Merge philosophy (do not cargo-cult)
+## 合并理念（不要照搬）
 
-OpenAI context: agent throughput ≫ human attention → short PRs, fewer blocking gates, fix-forward.
+OpenAI 的背景是 Agent 吞吐量远大于人的注意力，因此倾向短 PR、较少阻塞门禁和
+快速修复前进。
 
-Most personal / early repos: human attention is scarce → keep review/blocking checks until retries are cheap and mechanical rules catch copies of bad patterns.
+大多数个人或早期仓库中，人的注意力更稀缺，因此在重试成本足够低、机械规则能够
+拦住错误复制前，应保留评审和阻塞检查。
 
-Fast iteration means **small verifiable steps**, not lower standards.
+快速迭代意味着小步且可验证，不意味着降低标准。
 
-## Stage-0 check catalog (suggested)
+## Stage-0 检查清单
 
-Minimal set before application code:
+应用代码之前的最小集合：
 
-1. Every path linked from `AGENTS.md` exists.
-2. Every docs index that lists leaves: paths exist.
-3. Design/spec leaves include the repo's required status fields (if any).
-4. No file under `generated/` unless a regenerate command is documented.
-5. Active plans (if used) are real in-progress work.
-6. Research / notes do not silently override confirmed design decisions.
+1. AGENTS.md 链接的每个路径都存在。
+2. 每个列出叶子文档的索引，其路径都存在。
+3. 设计/规格叶子文档包含仓库要求的状态字段（如果有）。
+4. generated/ 下的文件有重新生成命令说明。
+5. 活跃计划确实处于进行中。
+6. 研究/笔记不会静默覆盖已确认的设计决定。
 
-Wire as a script when the repo has CI; until then, run as agent checklist in `check` mode.
+仓库有 CI 时，把它接成脚本；否则在 check 模式下作为 Agent 清单执行。
 
-## Stage-1+ (after code)
+## Stage-1 及以后（已有代码）
 
-1. Document allowed module dependency edges in `ARCHITECTURE.md` (or equivalent).
-2. Enforce edges with import linter or structural test; errors include fix guidance.
-3. Project checks (test/lint) become hard evidence (command + exit code), not agent self-report.
-4. Optional observability deep links must not block task progress when the tool is down.
+1. 在 ARCHITECTURE.md 或等价文档中记录允许的模块依赖边界。
+2. 用 Import Linter 或结构测试强制这些边界，错误信息包含修复提示。
+3. 项目检查成为硬证据（命令和退出码），而不是 Agent 自报结果。
+4. 可选的可观测性深链在工具不可用时不应阻塞任务。
 
-## Anti-patterns
+## 反模式
 
-- Giant single `AGENTS.md` encyclopedia
-- Empty leaf docs "for the index to look complete"
-- Harness eval dashboard / composite agent score
-- Encoding every preference as a rule (rule rot)
-- Auto-modifying merge/sandbox policy from a running agent loop
+- 巨大的单体 AGENTS.md 百科全书
+- 为了让索引看起来完整而创建空叶子文档
+- Harness 评测看板或 Agent 综合评分
+- 把每个偏好都编码成规则（规则腐化）
+- 从运行中的 Agent 闭环自动修改合并/沙箱策略

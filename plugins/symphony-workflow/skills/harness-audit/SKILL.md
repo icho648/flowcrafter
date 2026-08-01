@@ -1,171 +1,158 @@
 ---
 name: harness-audit
 description: >-
-  Audits and maintains repo-local Agent Harness: short AGENTS.md as a map,
-  structured docs as system of record, mechanical structure/cross-link/freshness
-  checks, and failure-to-rule feedback loops (OpenAI Harness Engineering). Use
-  when auditing project harness, scaffolding docs layout, checking indexes and
-  links, encoding review taste into docs or linters, diagnosing harness drift,
-  doc-gardening, or when the user mentions repo-as-system-of-record. Does not
-  build Harness eval products, composite scores, or Finding dashboards.
+  审计和维护项目本地 Agent Harness：用简短的 AGENTS.md 作为地图，用结构化
+  文档作为事实源，建立结构、交叉链接和新鲜度的机械检查，并将失败反馈回写
+  为规则（OpenAI Harness Engineering）。当需要审计项目 Harness、初始化文档
+  布局、检查索引和链接、将评审偏好编码到文档或 Linter、诊断 Harness 漂移、
+  整理陈旧文档，或用户提到 repo-as-system-of-record 时使用。不构建 Harness
+  评测产品、综合评分或 Finding 看板。
 ---
 
-# Harness Audit
+# Harness 审计
 
-Use repo-local docs, checks, and feedback loops to make Agents reliable. This
-is repository hygiene and workflow design—not an eval platform, scorecard, or
-Harness management product.
+使用项目本地的文档、检查和反馈闭环，让 Agent 更可靠。这是仓库治理与工作流
+设计，不是评测平台、评分卡或 Harness 管理产品。
 
-Primary source: [Harness Engineering](https://openai.com/index/harness-engineering/)
-(OpenAI). Practice the harness in-repo while building the product; extract more
-automation only after the same loop repeats.
+主要参考：[Harness Engineering](https://openai.com/index/harness-engineering/)
+（OpenAI）。在构建产品的同时把 Harness 落在仓库里；只有同一闭环重复出现后，
+才提取更多自动化。
 
-## Boundaries
+## 边界
 
-- Do not build eval/management surfaces, Finding boards, or composite scores.
-- Do not treat a generic Trace/Eval UI as the repository source of truth.
-- Do not silently change permissions, CI, merge policy, or release controls.
-- Do not cargo-cult blocking gates when human throughput is the bottleneck.
+- 不构建评测/管理界面、Finding 看板或综合评分。
+- 不把通用 Trace/Eval UI 当作仓库事实源。
+- 不静默修改权限、CI、合并策略或发布控制。
+- 当瓶颈是人的处理能力时，不照搬阻塞式门禁。
 
-## Evidence discipline
+## 证据纪律
 
-Label material claims as one of:
+给重要结论标注它所依据的证据状态：
 
-- **Observed** — a file, command result, test, CI run, or human decision directly shows it.
-- **Inferred** — source or structure supports it, but the behavior was not executed.
-- **Declared** — documentation says it is intended or decided.
-- **Not verified** — runtime, CI, deployment, credentials, external services, or human acceptance were not checked.
+- **已观察（Observed）**：文件、命令结果、测试、CI 运行或人的决定直接证明了它。
+- **已推断（Inferred）**：源码或结构支持它，但还没有执行验证该行为。
+- **已声明（Declared）**：文档表达了它的意图或决定。
+- **未验证（Not verified）**：尚未检查运行时、CI、部署、凭据、外部服务或人的验收。
 
-Keep these states separate. A mock, inventory, build, clean diff, or static
-document does not prove runtime or business correctness.
+不要混淆这些状态。Mock、清单、构建、干净 Diff 或静态文档，都不能证明运行时
+正确性或业务正确性。
 
-## Modes
+## 模式
 
-Pick one mode from the request (default: audit):
+根据请求选择一种模式（默认：audit）：
 
-| Mode | When | Output |
+| 模式 | 适用场景 | 输出 |
 |---|---|---|
-| audit | "check / audit harness" | Evidence-backed gaps + priorities |
-| scaffold | "init / align skeleton" | Minimum directory + entry edits |
-| check | "structure / links / freshness" | Mechanical failures with fix hints |
-| encode | Repeated failure or review feedback | One doc rule or one failing check |
-| garden | "garden / stale docs" | PR-sized candidate fixes |
+| audit | “检查 / 审计 Harness” | 有证据支持的缺口与优先级 |
+| scaffold | “初始化 / 对齐骨架” | 最小目录与入口修改 |
+| check | “检查结构 / 链接 / 新鲜度” | 带修复提示的机械失败 |
+| encode | 重复失败或评审反馈 | 一条文档规则或一个失败检查 |
+| garden | “整理 / 清理陈旧文档” | PR 大小的候选修复 |
 
-## Fast path
+## 快速路径
 
-1. Resolve the repository root and existing conventions.
-2. Read AGENTS.md, the root README.md, ARCHITECTURE.md if present, and each
-   docs partition index.md in use. Inspect existing tests, scripts, and CI
-   before proposing a new check.
-3. Classify each finding as Have, Missing, Drift signal, or Not verified. Do
-   not call an optional file missing merely because a template suggested it.
-4. Choose the smallest useful change and one runnable check. Stop after the
-   requested mode is satisfied.
+1. 确认仓库根目录和现有约定。
+2. 读取 AGENTS.md、根目录 README.md、存在时的 ARCHITECTURE.md，以及仓库正在使用
+   的每个文档分区 index.md。提出新检查前，先查看已有测试、脚本和 CI。
+3. 将每个发现归类为 Have、Missing、Drift signal 或 Not verified。不要因为模板
+   建议过某个可选文件，就直接把它判定为缺失。
+4. 选择最小的有效改动，并留下一个可运行的检查。满足请求模式后停止。
 
-## Core loop
+## 核心闭环
 
-Stuck or failed
-  → Missing capability, guidance, or enforcement?
-  → Write the smallest repo-local rule or check
-  → Verify on the next real task
-  → Keep if it works; shrink, change, or delete it if not
+卡住或失败
+  → 缺少能力、指导还是强制约束？
+  → 写入最小的仓库本地规则或检查
+  → 在下一次真实任务中验证
+  → 有效就保留；无效就缩小、修改或删除
 
-## Principles
+## 原则
 
-1. **Repo is the system of record**: chat or memory does not count until the
-   decision is versioned in Git.
-2. **Map, not encyclopedia**: keep AGENTS.md short (about 100 lines or less)
-   and put durable truth in partitioned docs plus indexes.
-3. **Mechanical checks are evidence**: use scripts/CI for structure, links,
-   required fields, and dependency boundaries; leave judgment to docs and
-   human review.
-4. **Invariants beat micro-management**: enforce boundaries and dependency
-   direction, then allow implementation freedom inside them.
-5. **Errors teach the next action**: every checker failure names the fix.
-6. **Drift is signal-based, not scored**: act on doc/reality mismatch, repeated
-   violations, deprecated pattern copying, or bypassed checks.
-7. **Merge policy matches throughput**: keep human review and blocking gates
-   until retries are cheap and mechanical checks catch the common copies.
+1. **仓库是事实源**：聊天或记忆中的共识，只有写入 Git 后才算 Agent 可用的事实。
+2. **地图，不是百科全书**：AGENTS.md 保持简短（约 100 行以内），持久事实放在
+   分区文档和索引中。
+3. **机械检查才是证据**：用脚本/CI 检查结构、链接、必填字段和依赖边界；判断性
+   内容留给文档和人工评审。
+4. **不变量优于微观管理**：约束边界和依赖方向，边界内部允许实现自由。
+5. **错误要教会下一步**：每个检查器失败都要说明如何修复。
+6. **漂移依赖信号，不依赖评分**：处理文档与现实不一致、重复违规、复制过时模式
+   或绕过检查。
+7. **合并策略匹配吞吐量**：在重试成本足够低、机械检查能拦住常见复制错误前，保留
+   人工评审和阻塞式门禁。
 
-## Workflow by mode
+## 各模式工作流
 
 ### audit
 
-1. Read the map, documentation indexes, existing checks, and recent failure or
-   review evidence.
-2. Judge only what the evidence supports:
-   - Is AGENTS.md navigation rather than an encyclopedia?
-   - Are design, specs, research, plans, and generated output separated where
-     the repo uses them?
-   - Do existing checks cover structure, links, freshness, and key invariants?
-   - Are repeated pain points encoded in docs or checks?
-3. Report Have, Missing, Drift signals, Not verified, and the next 1–3 actions.
-   Do not propose a Harness management product.
+1. 读取项目地图、文档索引、已有检查，以及近期失败或评审证据。
+2. 只判断证据能够支持的内容：
+   - AGENTS.md 是导航，还是已经变成百科全书？
+   - 在仓库实际使用这些分区的情况下，设计、规格、研究、计划和生成结果是否分开？
+   - 已有检查是否覆盖结构、链接、新鲜度和关键不变量？
+   - 重复出现的痛点是否已经写入文档或检查？
+3. 报告 Have、Missing、Drift signals、Not verified 和接下来 1–3 个动作。不要提出
+   Harness 管理产品。
 
 ### scaffold
 
-Create or align only the minimum skeleton, adapting to repository conventions:
+只创建或对齐最小骨架，并适配仓库已有约定：
 
-    AGENTS.md                 # short map
-    ARCHITECTURE.md           # physical/module map when code exists
+    AGENTS.md                 # 简短地图
+    ARCHITECTURE.md           # 代码存在时的物理/模块地图
     docs/
-      <partition>/index.md    # only partitions the repo actually uses
-      exec-plans/active/      # only when the repo uses ExecPlans
+      <partition>/index.md    # 只创建仓库实际使用的分区
+      exec-plans/active/      # 仅当仓库使用 ExecPlans 时创建
       exec-plans/completed/
       PLANS.md
 
-- Do not create empty leaf docs for completeness.
-- Give every new partition an index.md.
-- Reuse the repo's evidence markers, such as Observed, Decision, Proposed,
-  Not verified, and Out of scope.
-- Prefer editing the existing layout over renaming it wholesale.
+- 不为了完整而创建空的叶子文档。
+- 每个新分区都要有 index.md。
+- 复用仓库已有的证据标签，例如 Observed、Decision、Proposed、Not verified 和
+  Out of scope。
+- 优先修改现有布局，不要整体重命名。
 
 ### check
 
-Run existing scripts first. If no checker exists, return a pasteable checklist
-or add one only when the rule is repeatable and the repo has a natural place
-to run it. Check:
+先运行已有脚本。如果没有检查器，返回可粘贴到 CI 的清单；只有规则可重复执行且
+仓库有自然的运行位置时，才新增检查。检查：
 
-- required indexes and AGENTS.md links exist;
-- links in maps and indexes resolve;
-- status fields and freshness claims are internally consistent;
-- generated files document their regeneration command;
-- active plans are real, in-progress work.
+- 所需索引和 AGENTS.md 链接是否存在；
+- 地图和索引中的链接是否可解析；
+- 状态字段和新鲜度声明是否自洽；
+- 生成文件是否记录重新生成命令；
+- 活跃计划是否确实处于进行中。
 
-Use actionable errors:
+使用可执行的错误信息：
 
     Broken link: docs/design-docs/index.md → ./missing.md
     Fix: restore the file or remove the index row.
 
 ### encode
 
-For a failure, review comment, or repeated Agent mistake:
+针对失败、评审意见或重复的 Agent 错误：
 
-1. Classify it as missing tool, missing doc, missing enforceable rule, or noise.
-2. Choose one short doc rule or one mechanical check with a fix-oriented
-   message.
-3. Delete or shrink rules that no Agent follows and no check enforces.
-4. Stop; do not open a CMS or eval feature.
+1. 将问题归类为缺少工具、缺少文档、缺少可强制规则或噪声。
+2. 选择一条简短的文档规则，或一个带修复导向信息的机械检查。
+3. 删除或缩小没有 Agent 遵循、也没有检查强制的规则。
+4. 停止；不要打开 CMS 或评测功能。
 
 ### garden
 
-Scan the signals in [reference.md](reference.md), then propose or implement
-PR-sized fixes: repair links, mark stale proposals, archive dead plans, and
-update ARCHITECTURE.md when reality changed. Keep merge and release decisions
-under human control.
+扫描 [reference.md](reference.md) 中的漂移信号，然后提出或实现 PR 大小的修复：
+修复链接、标记陈旧提案、归档失效计划，以及在现实变化时更新 ARCHITECTURE.md。
+合并和发布决定保持在人控制之下。
 
-## Stage guidance
+## 阶段指导
 
-| Stage | Do | Don't |
+| 阶段 | 应做 | 不应做 |
 |---|---|---|
-| Docs-only | map, indexes, and stage-0 checks | dependency linters or GC bots |
-| App exists | module invariants and project checks as hard evidence | lower standards by default |
-| Stable loop | doc gardening and small GC | Harness eval dashboards |
+| 只有文档 | 地图、索引和 stage-0 检查 | 依赖 Linter 或 GC 机器人 |
+| 已有应用 | 模块不变量和作为硬证据的项目检查 | 默认降低标准 |
+| 闭环稳定 | 文档整理和小型 GC | Harness 评测看板 |
 
-## Additional resources
+## 其他资源
 
-- Article map, evidence rules, drift signals, and stage-0 catalog:
+- 文章映射、证据规则、漂移信号和 stage-0 清单：
   [reference.md](reference.md)
 
-Trigger tip: default mode is audit; say scaffold, check, encode, or garden when
-needed.
+触发提示：默认模式是 audit；需要时说 scaffold、check、encode 或 garden。

@@ -1,6 +1,6 @@
 interface:
-  display_name: "Harness Audit"
-  short_description: "Audit repo-local harness evidence, checks, and drift"
-  default_prompt: "Use $harness-audit to audit this repository's Agent guidance, evidence, checks, and drift."
+  display_name: "Harness 审计"
+  short_description: "审计项目本地 Harness 的证据、检查与漂移"
+  default_prompt: "使用 $harness-audit 审计本项目的 Agent 指南、证据、检查和漂移。"
 policy:
   allow_implicit_invocation: false
