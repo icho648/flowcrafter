@@ -106,3 +106,64 @@ OpenAI 的背景是 Agent 吞吐量远大于人的注意力，因此倾向短 PR
 - Harness 评测看板或 Agent 综合评分
 - 把每个偏好都编码成规则（规则腐化）
 - 从运行中的 Agent 闭环自动修改合并/沙箱策略
+
+## 各模式工作流
+
+### audit
+
+1. 读取项目地图、文档索引、已有检查，以及近期失败或评审证据。
+2. 只判断证据能够支持的内容：
+   - AGENTS.md 是导航，还是已经变成百科全书？
+   - 在仓库实际使用这些分区的情况下，设计、规格、研究、计划和生成结果是否分开？
+   - 已有检查是否覆盖结构、链接、新鲜度和关键不变量？
+   - 重复出现的痛点是否已经写入文档或检查？
+3. 报告 Have、Missing、Drift signals、Not verified 和接下来 1–3 个动作。不要提出
+   Harness 管理产品。
+
+### scaffold
+
+只创建或对齐最小骨架，并适配仓库已有约定：
+
+    AGENTS.md                 # 简短地图
+    ARCHITECTURE.md           # 代码存在时的物理/模块地图
+    docs/
+      <partition>/index.md    # 只创建仓库实际使用的分区
+      exec-plans/active/      # 仅当仓库使用 ExecPlans 时创建
+      exec-plans/completed/
+      PLANS.md
+
+- 不为了完整而创建空的叶子文档。
+- 每个新分区都要有 index.md。
+- 复用仓库已有的证据标签，例如 Observed、Decision、Proposed、Not verified 和
+  Out of scope。
+- 优先修改现有布局，不要整体重命名。
+
+### check
+
+先运行已有脚本。如果没有检查器，返回可粘贴到 CI 的清单；只有规则可重复执行且
+仓库有自然的运行位置时，才新增检查。检查：
+
+- 所需索引和 AGENTS.md 链接是否存在；
+- 地图和索引中的链接是否可解析；
+- 状态字段和新鲜度声明是否自洽；
+- 生成文件是否记录重新生成命令；
+- 活跃计划是否确实处于进行中。
+
+使用可执行的错误信息：
+
+    Broken link: docs/design-docs/index.md → ./missing.md
+    Fix: restore the file or remove the index row.
+
+### encode
+
+针对失败、评审意见或重复的 Agent 错误：
+
+1. 将问题归类为缺少工具、缺少文档、缺少可强制规则或噪声。
+2. 选择一条简短的文档规则，或一个带修复导向信息的机械检查。
+3. 删除或缩小没有 Agent 遵循、也没有检查强制的规则。
+4. 停止；不要打开 CMS 或评测功能。
+
+### garden
+
+扫描本文件前面的漂移信号，然后提出或实现 PR 大小的修复：修复链接、标记陈旧提案、
+归档失效计划，以及在现实变化时更新 ARCHITECTURE.md。合并和发布决定保持在人控制之下。
