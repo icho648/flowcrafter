@@ -118,7 +118,8 @@ OpenAI 的背景是 Agent 吞吐量远大于人的注意力，因此倾向短 PR
    - 已有检查是否覆盖结构、链接、新鲜度和关键不变量？
    - 重复出现的痛点是否已经写入文档或检查？
 3. 报告 Have、Missing、Drift signals、Not verified 和接下来 1–3 个动作。不要提出
-   Harness 管理产品。
+   Harness 管理产品。audit 模式只输出报告与推荐，不创建、修改或删除仓库文件；
+   若用户要落地修复，请其改用 scaffold、encode 或 garden。
 
 ### scaffold
 
