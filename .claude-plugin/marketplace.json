@@ -50,7 +50,7 @@
     },
     {
       "name": "symphony-workflow",
-      "description": "Repo-local Agent Harness auditing and workflow guardrails for reliable Agent execution.",
+      "description": "Repo-local Agent Harness auditing and minimal Issue planning for reliable Agent workflows.",
       "source": "./plugins/symphony-workflow",
       "category": "productivity",
       "homepage": "https://github.com/icho648/flowcrafter/tree/main/plugins/symphony-workflow",
@@ -63,7 +63,10 @@
         "harness",
         "documentation",
         "checks",
-        "drift"
+        "drift",
+        "issues",
+        "issue-tracker",
+        "decomposition"
       ]
     }
   ]

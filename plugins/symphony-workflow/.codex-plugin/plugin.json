@@ -1,7 +1,7 @@
 {
   "name": "symphony-workflow",
   "version": "1.0.0",
-  "description": "Repo-local Agent Harness auditing and workflow guardrails for reliable Agent execution.",
+  "description": "Repo-local Agent Harness auditing and minimal Issue planning for reliable Agent workflows.",
   "author": {
     "name": "icho648",
     "url": "https://github.com/icho648"
@@ -15,20 +15,23 @@
     "harness",
     "documentation",
     "checks",
-    "drift"
+    "drift",
+    "issues",
+    "issue-tracker",
+    "decomposition"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Symphony Workflow",
-    "shortDescription": "Agent Harness audits and workflow guardrails.",
-    "longDescription": "Audit repo-local Agent guidance, evidence, checks, and drift so Symphony-oriented workflows stay reliable without turning into an eval dashboard.",
+    "shortDescription": "Agent Harness audits and minimal Issue planning.",
+    "longDescription": "Audit repo-local Agent guidance, evidence, checks, and drift, then shape broad intents into minimal linked Issues without turning the workflow into an eval dashboard.",
     "developerName": "icho648",
     "category": "Productivity",
     "capabilities": [],
     "defaultPrompt": [
       "Use $harness-audit to audit this repository's Agent Harness.",
-      "Use $harness-audit check to inspect links, freshness, and structure.",
-      "Use $harness-audit encode to turn a repeated failure into one rule."
+      "Use $intent-to-issues to decide whether a broad goal needs decomposition.",
+      "Use $intent-to-issues after confirmation to prepare GitHub Issues."
     ]
   }
 }

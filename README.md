@@ -6,7 +6,7 @@
 
 [简体中文](README.zh-CN.md)
 
-A Claude Code and Codex marketplace for crafted Agent workflows. Add `flowcrafter` once, then install Rit’s personal workflow bundle, the PRD delivery workflow, the Symphony Workflow harness-audit plugin, or any combination.
+A Claude Code and Codex marketplace for crafted Agent workflows. Add `flowcrafter` once, then install Rit’s personal workflow bundle, the PRD delivery workflow, the Symphony Workflow plugin, or any combination.
 
 ## Plugins
 
@@ -14,7 +14,7 @@ A Claude Code and Codex marketplace for crafted Agent workflows. Add `flowcrafte
 | --- | --- | --- |
 | [rit-plugin](plugins/rit-plugin/) | `setup-agent-guidance`, `grounded-explainer`, `learn` | Rit’s project-guidance, explanation, and learning workflows share one personal bundle. |
 | [prd-workflow](plugins/prd-workflow/) | `write-prd`, `implement-prd`, `review-prd-implementation` | Implementation has a hard dependency on the review loop, so the PRD skills install together. |
-| [symphony-workflow](plugins/symphony-workflow/) | `harness-audit` | Repo-local Agent Harness auditing and workflow guardrails. |
+| [symphony-workflow](plugins/symphony-workflow/) | `harness-audit`, `intent-to-issues` | Repo-local Agent Harness auditing and minimal linked Issue planning. |
 
 The GitHub repository name and Marketplace ID are both `flowcrafter`.
 
@@ -93,7 +93,8 @@ When installing `implement-prd` manually, also install `review-prd-implementatio
 │   │       └── review-prd-implementation/
 │   └── symphony-workflow/
 │       └── skills/
-│           └── harness-audit/
+│           ├── harness-audit/
+│           └── intent-to-issues/
 ├── .github/                              # validation and release workflows
 ├── tests/                                # validator regression tests
 └── AGENTS.md                             # Marketplace maintenance policy

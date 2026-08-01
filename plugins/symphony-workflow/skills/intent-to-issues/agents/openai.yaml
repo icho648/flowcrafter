@@ -1,0 +1,6 @@
+interface:
+  display_name: "Intent 到 Issues"
+  short_description: "先判断是否拆解，再生成最小 Issue 结构"
+  default_prompt: "使用 $intent-to-issues 先判断是否需要拆解，再生成最小可验收的 Issue 草案；确认后询问是否写入 GitHub Issues。"
+policy:
+  allow_implicit_invocation: false
