@@ -1,11 +1,12 @@
 ---
 name: harness-audit
 description: >-
-  审计和维护项目本地 Agent Harness：用简短的 AGENTS.md 作为地图，用结构化
-  文档作为事实源，建立结构、交叉链接和新鲜度的机械检查，并将失败反馈回写
-  为规则（OpenAI Harness Engineering）。当需要审计项目 Harness、初始化文档
-  布局、检查索引和链接、将评审偏好编码到文档或 Linter、诊断 Harness 漂移、
-  整理陈旧文档，或用户提到 repo-as-system-of-record 时使用。不构建 Harness
+  仅在用户显式调用时使用（Codex 为 $harness-audit；Claude Code 插件安装为
+  /symphony-workflow:harness-audit；手动安装为 /harness-audit）；不允许隐式触发。
+  普通项目审计、文档、索引、链接、新鲜度或工作流请求，即使相关关键词出现，也不得
+  触发，除非当前请求同时包含显式调用。触发后，审计和维护项目本地 Agent Harness：
+  用简短的 AGENTS.md 作为地图，用结构化文档作为事实源，建立结构、交叉链接和新鲜度
+  的机械检查，并将失败反馈回写为规则（OpenAI Harness Engineering）。不构建 Harness
   评测产品、综合评分或 Finding 看板。
 ---
 
@@ -24,6 +25,12 @@ description: >-
 - 不把通用 Trace/Eval UI 当作仓库事实源。
 - 不静默修改权限、CI、合并策略或发布控制。
 - 当瓶颈是人的处理能力时，不照搬阻塞式门禁。
+
+## 启用前检查
+
+1. 确认当前请求包含 $harness-audit、/symphony-workflow:harness-audit 或
+   /harness-audit。
+2. 如果没有显式调用，不启用本技能，也不要把普通请求当作隐式调用。
 
 ## 证据纪律
 
@@ -138,7 +145,7 @@ description: >-
 
 ### garden
 
-扫描 [reference.md](reference.md) 中的漂移信号，然后提出或实现 PR 大小的修复：
+扫描 [reference.md](references/reference.md) 中的漂移信号，然后提出或实现 PR 大小的修复：
 修复链接、标记陈旧提案、归档失效计划，以及在现实变化时更新 ARCHITECTURE.md。
 合并和发布决定保持在人控制之下。
 
@@ -153,6 +160,6 @@ description: >-
 ## 其他资源
 
 - 文章映射、证据规则、漂移信号和 stage-0 清单：
-  [reference.md](reference.md)
+  [reference.md](references/reference.md)
 
 触发提示：默认模式是 audit；需要时说 scaffold、check、encode 或 garden。
