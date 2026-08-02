@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - `setup-agent-guidance` skill and its assets, references, and documentation references from `rit-plugin`.
 
+### Changed
+- Bumped `rit-plugin` Claude and Codex manifests from `1.0.0` to `2.0.0` after removing a public skill (breaking plugin payload change).
+
 ### Added
 - Two independently installable plugins: `rit-plugin` for Rit’s personal workflows and `prd-workflow` for the PRD delivery loop.
 - `write-prd`, `implement-prd`, and `review-prd-implementation` as one portable PRD authoring, delivery, Standards/Spec review, and acceptance workflow.
