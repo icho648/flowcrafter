@@ -7,10 +7,7 @@ from pathlib import Path
 
 
 LOCALES = ("en", "zh-CN")
-SINGLE_LOCALE_RESOURCES = {
-    "plugins/rit-plugin/skills/setup-agent-guidance/"
-    "references/triggers.zh-CN.md"
-}
+SINGLE_LOCALE_RESOURCES: set[str] = set()
 REFERENCE_RE = re.compile(
     r"(?<![\w/])((?:references|assets)/[A-Za-z0-9_.<>\-/]+)"
 )

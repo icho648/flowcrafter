@@ -4,7 +4,6 @@ Rit's personal Claude Code and Codex workflow bundle.
 
 ## Included skills
 
-- `setup-agent-guidance` — initialize durable, bilingual project guidance.
 - `grounded-explainer` — explicitly invoked, evidence-grounded technical explanation with concrete scenarios and proportional depth.
 - `learn` — maintain evidence-based learning state through real practice.
 
@@ -24,7 +23,7 @@ claude plugin marketplace add icho648/flowcrafter
 claude plugin install rit-plugin@flowcrafter
 ```
 
-Codex invokes the skills as `$setup-agent-guidance`, `$grounded-explainer`, and `$learn`. Claude Code uses `/rit-plugin:<skill-name>`.
+Codex invokes the skills as `$grounded-explainer` and `$learn`. Claude Code uses `/rit-plugin:<skill-name>`.
 
 ## License
 

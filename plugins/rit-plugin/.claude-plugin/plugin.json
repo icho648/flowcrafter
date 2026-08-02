@@ -1,7 +1,7 @@
 {
   "name": "rit-plugin",
   "version": "1.0.0",
-  "description": "Rit's project-guidance, grounded-explanation, and evidence-based learning workflows.",
+  "description": "Rit's grounded-explanation and evidence-based learning workflows.",
   "author": {
     "name": "icho648"
   },

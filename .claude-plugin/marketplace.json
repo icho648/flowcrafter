@@ -1,14 +1,14 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "flowcrafter",
-  "description": "A Claude Code and Codex marketplace for crafted agent workflows covering project guidance, explanation, PRD delivery, review, and learning.",
+  "description": "A Claude Code and Codex marketplace for crafted agent workflows covering explanation, PRD delivery, review, and learning.",
   "owner": {
     "name": "icho648"
   },
   "plugins": [
     {
       "name": "rit-plugin",
-      "description": "Rit's project-guidance, grounded-explanation, and evidence-based learning workflows.",
+      "description": "Rit's grounded-explanation and evidence-based learning workflows.",
       "source": "./plugins/rit-plugin",
       "category": "productivity",
       "homepage": "https://github.com/icho648/flowcrafter/tree/main/plugins/rit-plugin",
@@ -16,11 +16,6 @@
         "name": "icho648"
       },
       "keywords": [
-        "agents",
-        "agentsmd",
-        "claudemd",
-        "guidance",
-        "onboarding",
         "explanation",
         "education",
         "mental-model",
