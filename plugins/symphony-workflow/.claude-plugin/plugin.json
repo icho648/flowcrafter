@@ -1,0 +1,10 @@
+{
+  "name": "symphony-workflow",
+  "version": "1.0.0",
+  "description": "Repo-local Agent Harness auditing and minimal Issue planning for reliable Agent workflows.",
+  "author": {
+    "name": "icho648"
+  },
+  "homepage": "https://github.com/icho648/flowcrafter/tree/main/plugins/symphony-workflow",
+  "license": "MIT"
+}

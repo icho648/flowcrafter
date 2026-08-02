@@ -6,7 +6,7 @@
 
 [English](README.md)
 
-一个托管精心打磨的 Agent 工作流的 Claude Code 与 Codex Marketplace。添加一次 `flowcrafter`，然后按需安装 Rit 的个人工作流插件、PRD 交付插件，或同时安装二者。
+一个托管精心打磨的 Agent 工作流的 Claude Code 与 Codex Marketplace。添加一次 `flowcrafter`，然后按需安装 Rit 的个人工作流插件、PRD 交付插件、Symphony Workflow 插件，或任意组合。
 
 ## 插件
 
@@ -14,6 +14,7 @@
 | --- | --- | --- |
 | [rit-plugin](plugins/rit-plugin/) | `setup-agent-guidance`、`grounded-explainer`、`learn` | Rit 的项目指南、解释和学习工作流共用一个个人插件包。 |
 | [prd-workflow](plugins/prd-workflow/) | `write-prd`、`implement-prd`、`review-prd-implementation` | 实施对审阅闭环存在硬依赖，因此 PRD Skills 一起安装。 |
+| [symphony-workflow](plugins/symphony-workflow/) | `harness-audit`、`intent-to-issues` | 项目本地 Agent Harness 审计与最小 Issue 规划。 |
 
 GitHub 仓库名与 Marketplace ID 都是 `flowcrafter`。
 
@@ -25,9 +26,10 @@ GitHub 仓库名与 Marketplace ID 都是 `flowcrafter`。
 codex plugin marketplace add icho648/flowcrafter
 codex plugin add rit-plugin@flowcrafter
 codex plugin add prd-workflow@flowcrafter
+codex plugin add symphony-workflow@flowcrafter
 ```
 
-可以只安装一个插件，也可以同时安装。安装后新建 Codex 任务，使其发现所选 Skills。
+可以只安装一个插件，也可以按需组合安装。安装后新建 Codex 任务，使其发现所选 Skills。
 
 ### Claude Code
 
@@ -35,13 +37,14 @@ codex plugin add prd-workflow@flowcrafter
 claude plugin marketplace add icho648/flowcrafter
 claude plugin install rit-plugin@flowcrafter
 claude plugin install prd-workflow@flowcrafter
+claude plugin install symphony-workflow@flowcrafter
 ```
 
 安装后重启 Claude Code。Claude Code 使用带命名空间的调用，例如 `/rit-plugin:learn` 和 `/prd-workflow:write-prd`；Codex 对同一 Skills 使用 `$learn` 和 `$write-prd`。
 
 ### 从 `icho648-skills` 迁移
 
-旧 Marketplace ID 和一体化插件由 `flowcrafter` 与两个聚焦插件取代：
+旧 Marketplace ID 和一体化插件由 `flowcrafter` 与聚焦插件取代：
 
 ```bash
 # Codex
@@ -50,6 +53,7 @@ codex plugin marketplace remove icho648-skills
 codex plugin marketplace add icho648/flowcrafter
 codex plugin add rit-plugin@flowcrafter
 codex plugin add prd-workflow@flowcrafter
+codex plugin add symphony-workflow@flowcrafter
 ```
 
 ```bash
@@ -59,6 +63,7 @@ claude plugin marketplace remove icho648-skills
 claude plugin marketplace add icho648/flowcrafter
 claude plugin install rit-plugin@flowcrafter
 claude plugin install prd-workflow@flowcrafter
+claude plugin install symphony-workflow@flowcrafter
 ```
 
 未安装的旧项目可以跳过对应的移除命令。
@@ -81,11 +86,15 @@ claude plugin install prd-workflow@flowcrafter
 │   │       ├── setup-agent-guidance/
 │   │       ├── grounded-explainer/
 │   │       └── learn/
-│   └── prd-workflow/
+│   ├── prd-workflow/
+│   │   └── skills/
+│   │       ├── write-prd/
+│   │       ├── implement-prd/
+│   │       └── review-prd-implementation/
+│   └── symphony-workflow/
 │       └── skills/
-│           ├── write-prd/
-│           ├── implement-prd/
-│           └── review-prd-implementation/
+│           ├── harness-audit/
+│           └── intent-to-issues/
 ├── .github/                              # 校验与发布工作流
 ├── tests/                                # 校验器回归测试
 └── AGENTS.md                             # Marketplace 维护策略

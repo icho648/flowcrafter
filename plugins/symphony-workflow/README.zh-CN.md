@@ -1,0 +1,30 @@
+# symphony-workflow
+
+一个用于审计仓库本地 Agent Harness，并将模糊意图收敛为最小 Issue 结构的
+Claude Code 与 Codex 插件。
+
+## 包含的 Skill
+
+- harness-audit：审计、初始化、检查、编码和整理项目指南、证据、链接、
+  新鲜度与反馈闭环。
+- intent-to-issues：判断目标是否需要拆解，生成最小的 Parent/Sub-issue 草案，
+  并在写入 GitHub Issues 前征得确认。
+
+两个 Skill 都采用显式调用，避免普通实现或规划工作无意触发审计或 Issue 写入。
+
+## 安装
+
+    codex plugin marketplace add icho648/flowcrafter
+    codex plugin add symphony-workflow@flowcrafter
+
+Claude Code：
+
+    claude plugin marketplace add icho648/flowcrafter
+    claude plugin install symphony-workflow@flowcrafter
+
+Codex 使用 $harness-audit 和 $intent-to-issues 调用；Claude Code 使用
+/symphony-workflow:harness-audit 和 /symphony-workflow:intent-to-issues。
+
+## 许可
+
+MIT。见 LICENSE。
