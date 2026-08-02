@@ -14,7 +14,7 @@ A Claude Code and Codex marketplace for crafted Agent workflows. Add `flowcrafte
 | --- | --- | --- |
 | [rit-plugin](plugins/rit-plugin/) | `grounded-explainer`, `learn` | Rit’s explanation and learning workflows share one personal bundle. |
 | [prd-workflow](plugins/prd-workflow/) | `write-prd`, `implement-prd`, `review-prd-implementation` | Implementation has a hard dependency on the review loop, so the PRD skills install together. |
-| [symphony-workflow](plugins/symphony-workflow/) | `harness-audit`, `intent-to-issues` | Repo-local Agent Harness auditing and minimal linked Issue planning. |
+| [symphony-workflow](plugins/symphony-workflow/) | `harness-audit`, `intent-to-issues`, `autopilot` | Repo-local Agent Harness auditing, minimal linked Issue planning, and merge-ready PR automation. |
 
 The GitHub repository name and Marketplace ID are both `flowcrafter`.
 
@@ -93,7 +93,8 @@ When installing `implement-prd` manually, also install `review-prd-implementatio
 │   └── symphony-workflow/
 │       └── skills/
 │           ├── harness-audit/
-│           └── intent-to-issues/
+│           ├── intent-to-issues/
+│           └── autopilot/
 ├── .github/                              # validation and release workflows
 ├── tests/                                # validator regression tests
 └── AGENTS.md                             # Marketplace maintenance policy
