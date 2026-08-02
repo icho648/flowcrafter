@@ -14,7 +14,7 @@
 | --- | --- | --- |
 | [rit-plugin](plugins/rit-plugin/) | `grounded-explainer`、`learn` | Rit 的解释和学习工作流共用一个个人插件包。 |
 | [prd-workflow](plugins/prd-workflow/) | `write-prd`、`implement-prd`、`review-prd-implementation` | 实施对审阅闭环存在硬依赖，因此 PRD Skills 一起安装。 |
-| [symphony-workflow](plugins/symphony-workflow/) | `harness-audit`、`intent-to-issues` | 项目本地 Agent Harness 审计与最小 Issue 规划。 |
+| [symphony-workflow](plugins/symphony-workflow/) | `harness-audit`、`intent-to-issues`、`autopilot` | 项目本地 Agent Harness 审计、最小 Issue 规划与推进 PR 可合并。 |
 
 GitHub 仓库名与 Marketplace ID 都是 `flowcrafter`。
 
@@ -93,7 +93,8 @@ claude plugin install symphony-workflow@flowcrafter
 │   └── symphony-workflow/
 │       └── skills/
 │           ├── harness-audit/
-│           └── intent-to-issues/
+│           ├── intent-to-issues/
+│           └── autopilot/
 ├── .github/                              # 校验与发布工作流
 ├── tests/                                # 校验器回归测试
 └── AGENTS.md                             # Marketplace 维护策略

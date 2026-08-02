@@ -45,7 +45,7 @@
     },
     {
       "name": "symphony-workflow",
-      "description": "Repo-local Agent Harness auditing and minimal Issue planning for reliable Agent workflows.",
+      "description": "Repo-local Agent Harness auditing, minimal Issue planning, and PR autopilot for reliable Agent workflows.",
       "source": "./plugins/symphony-workflow",
       "category": "productivity",
       "homepage": "https://github.com/icho648/flowcrafter/tree/main/plugins/symphony-workflow",
@@ -61,7 +61,11 @@
         "drift",
         "issues",
         "issue-tracker",
-        "decomposition"
+        "decomposition",
+        "pull-request",
+        "code-review",
+        "ci",
+        "automation"
       ]
     }
   ]
