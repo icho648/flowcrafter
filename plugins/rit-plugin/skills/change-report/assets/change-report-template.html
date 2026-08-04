@@ -1,0 +1,986 @@
+<!doctype html>
+<html lang="zh-CN" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#101214" media="(prefers-color-scheme: dark)">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src 'none'; font-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Change Report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f2ec;
+      --paper: #fcfbf7;
+      --panel: #efece3;
+      --ink: #1b1d21;
+      --copy: #43474f;
+      --muted: #7d7a70;
+      --line: #ddd8ca;
+      --line-strong: #b4ae9c;
+      --accent: #2b4fd8;
+      --accent-soft: #e8edfb;
+      --good: #1d7a4a;
+      --good-soft: #e2f0e6;
+      --risk: #b23324;
+      --risk-soft: #f8e7e3;
+      --warn: #96690a;
+      --warn-soft: #f6ecd4;
+      --shadow: 0 1px 1px rgba(27, 29, 33, .04), 0 16px 40px rgba(27, 29, 33, .07);
+      --radius: 5px;
+      --font-ui: "Avenir Next", Avenir, "Segoe UI", system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --font-serif: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "STSong", Georgia, "Times New Roman", serif;
+      --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #101214;
+      --paper: #17191c;
+      --panel: #202328;
+      --ink: #f2f1eb;
+      --copy: #c7c9cf;
+      --muted: #96999f;
+      --line: #33373d;
+      --line-strong: #656b74;
+      --accent: #9fb4ff;
+      --accent-soft: #202a4c;
+      --good: #77d39d;
+      --good-soft: #173524;
+      --risk: #ff9b8e;
+      --risk-soft: #43201c;
+      --warn: #f1c56c;
+      --warn-soft: #3e3016;
+      --shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 18px 42px rgba(0, 0, 0, .2);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg: #101214;
+        --paper: #17191c;
+        --panel: #202328;
+        --ink: #f2f1eb;
+        --copy: #c7c9cf;
+        --muted: #96999f;
+        --line: #33373d;
+        --line-strong: #656b74;
+        --accent: #9fb4ff;
+        --accent-soft: #202a4c;
+        --good: #77d39d;
+        --good-soft: #173524;
+        --risk: #ff9b8e;
+        --risk-soft: #43201c;
+        --warn: #f1c56c;
+        --warn-soft: #3e3016;
+        --shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 18px 42px rgba(0, 0, 0, .2);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--bg); }
+    body {
+      min-width: 320px;
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font: 15px/1.65 var(--font-ui);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: inherit; }
+    button { font: inherit; }
+    h1, h2, h3, p, dl, dd, ul, ol { margin: 0; }
+    ul, ol { padding: 0; }
+    ::selection { color: var(--bg); background: var(--ink); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 40;
+      top: 12px;
+      left: 12px;
+      transform: translateY(-160%);
+      padding: 8px 12px;
+      color: var(--bg);
+      background: var(--ink);
+      border-radius: var(--radius);
+      font: 12px/1.3 var(--font-mono);
+    }
+    .skip-link:focus { transform: translateY(0); }
+
+    /* ---------- layout + rail ---------- */
+
+    .layout {
+      display: grid;
+      grid-template-columns: 200px minmax(0, 1fr);
+      gap: 44px;
+      width: min(1180px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 32px 0 72px;
+    }
+
+    .rail-inner {
+      position: sticky;
+      top: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      max-height: calc(100vh - 56px);
+    }
+
+    .brand { display: inline-flex; align-items: center; gap: 10px; font: 700 11px/1 var(--font-mono); letter-spacing: .16em; text-transform: uppercase; }
+    .brand-mark {
+      display: grid;
+      width: 28px;
+      height: 28px;
+      place-items: center;
+      color: var(--bg);
+      background: var(--ink);
+      border-radius: 50%;
+      font: 700 10px/1 var(--font-mono);
+      letter-spacing: -.03em;
+    }
+
+    .rail-nav { display: grid; gap: 2px; }
+    .rail-link {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 7px 10px;
+      border-left: 2px solid transparent;
+      color: var(--muted);
+      font-size: 13px;
+      text-decoration: none;
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+    .rail-link:hover { color: var(--ink); }
+    .rail-link.active { border-left-color: var(--ink); color: var(--ink); background: var(--panel); font-weight: 650; }
+    .rail-count { color: var(--muted); font: 11px/1 var(--font-mono); font-variant-numeric: tabular-nums; }
+
+    .rail-foot { border-top: 1px solid var(--line); padding-top: 14px; }
+
+    .theme-group { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--paper); }
+    .theme-group button {
+      padding: 5px 11px;
+      border: 0;
+      color: var(--muted);
+      background: transparent;
+      font: 11px/1.4 var(--font-mono);
+      cursor: pointer;
+    }
+    .theme-group button[aria-pressed="true"] { color: var(--bg); background: var(--ink); }
+
+    /* ---------- hero ---------- */
+
+    .hero { padding-top: 6px; }
+    .hero-eyebrow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: baseline;
+      margin-bottom: 16px;
+      color: var(--muted);
+      font: 11px/1.5 var(--font-mono);
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 26ch;
+      font: 700 clamp(30px, 5vw, 50px)/1.14 var(--font-serif);
+      letter-spacing: -.015em;
+      text-wrap: balance;
+    }
+    .target-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; }
+    .target {
+      display: inline-block;
+      max-width: 100%;
+      margin-top: 12px;
+      color: var(--accent);
+      font: 13px/1.45 var(--font-mono);
+      overflow-wrap: anywhere;
+      text-decoration: none;
+    }
+    a.target:hover { text-decoration: underline; }
+    .target-diff { color: var(--muted); font: 11px/1.45 var(--font-mono); text-decoration: none; }
+    a.target-diff:hover { color: var(--accent); text-decoration: underline; }
+
+    .summary-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(210px, .55fr);
+      gap: 24px;
+      margin-top: 26px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--accent);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+    .eyebrow {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font: 700 10px/1.3 var(--font-mono);
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .summary-purpose-block + .eyebrow { margin-top: 22px; }
+    .summary-purpose { max-width: 70ch; color: var(--copy); font-size: 15px; }
+    .summary-purpose-source {
+      display: inline-flex;
+      margin-top: 7px;
+      padding: 3px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: var(--panel);
+      font: 10.5px/1.3 var(--font-mono);
+      overflow-wrap: anywhere;
+    }
+    .summary-headline { max-width: 70ch; font: 700 22px/1.35 var(--font-serif); }
+    .summary-details { max-width: 76ch; margin-top: 9px; color: var(--copy); }
+    .before-after { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
+    .change-state { min-width: 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+    .change-state p { color: var(--copy); font-size: 13.5px; overflow-wrap: anywhere; }
+
+    .summary-flow { list-style: none; margin: 12px 0 0; padding: 0; counter-reset: step; display: grid; }
+    .summary-flow li { position: relative; padding: 5px 0 5px 36px; color: var(--copy); font-size: 13.5px; counter-increment: step; }
+    .summary-flow li::before {
+      content: counter(step, decimal-leading-zero);
+      position: absolute;
+      left: 0;
+      top: 7px;
+      color: var(--accent);
+      font: 700 10px/1 var(--font-mono);
+    }
+    .summary-flow li::after { content: ""; position: absolute; left: 8px; top: 20px; bottom: -5px; width: 1px; background: var(--line); }
+    .summary-flow li:last-child::after { display: none; }
+
+    .summary-meta { min-width: 0; padding-left: 24px; border-left: 1px solid var(--line); }
+    .meta-row + .meta-row { margin-top: 12px; }
+    .meta-label { display: block; margin-bottom: 3px; color: var(--muted); font: 700 10px/1.25 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+    .meta-value { min-width: 0; color: var(--copy); font: 12px/1.45 var(--font-mono); overflow-wrap: anywhere; }
+
+    .revision {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+      gap: 0;
+      margin-top: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      overflow: hidden;
+    }
+    .revision-cell { min-width: 0; padding: 13px 16px; }
+    .revision-cell + .revision-cell { border-left: 1px solid var(--line); }
+    .revision-value { display: flex; align-items: center; gap: 7px; color: var(--copy); font: 12px/1.5 var(--font-mono); overflow-wrap: anywhere; }
+    .revision-value strong { color: var(--ink); font-weight: 700; }
+
+    .dot { flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; background: var(--line-strong); }
+    .dot[data-tone="good"] { background: var(--good); }
+    .dot[data-tone="warn"] { background: var(--warn); }
+
+    /* ---------- stat strip ---------- */
+
+    .stat-strip {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      margin-top: 16px;
+      padding: 14px 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+    }
+    .stat { display: flex; flex-direction: column; }
+    .stat-num { font: 700 24px/1 var(--font-serif); font-variant-numeric: tabular-nums; }
+    .stat-num.add { color: var(--good); }
+    .stat-num.del { color: var(--risk); }
+    .stat-lab { margin-top: 4px; color: var(--muted); font: 700 9.5px/1.2 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+    .stat-bar { margin-left: auto; display: flex; width: 132px; height: 7px; border-radius: 4px; background: var(--panel); overflow: hidden; }
+    .stat-bar i { display: block; height: 100%; }
+    .stat-bar .add { background: var(--good); }
+    .stat-bar .del { background: var(--risk); }
+
+    .excluded { margin-top: 16px; padding: 13px 16px; border: 1px dashed var(--line-strong); border-radius: var(--radius); color: var(--copy); font-size: 13px; }
+    .excluded strong { color: var(--muted); font: 700 10px/1.3 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+    .excluded ul { margin-top: 5px; padding-left: 18px; }
+
+    /* ---------- sections ---------- */
+
+    .section { margin-top: 46px; scroll-margin-top: 20px; }
+    .section-head { display: flex; align-items: baseline; gap: 14px; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+    .section-index { color: var(--muted); font: 700 12px/1 var(--font-mono); letter-spacing: .1em; }
+    .section h2 { font: 700 25px/1.2 var(--font-serif); }
+    .section-note { max-width: 44ch; margin-left: auto; color: var(--muted); font: 11px/1.5 var(--font-mono); text-align: right; overflow-wrap: anywhere; }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      max-width: 100%;
+      min-height: 21px;
+      padding: 3px 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: var(--panel);
+      font: 10.5px/1.25 var(--font-mono);
+      overflow-wrap: anywhere;
+    }
+    .chip[data-tone="good"] { border-color: var(--good); color: var(--good); background: var(--good-soft); }
+    .chip[data-tone="risk"] { border-color: var(--risk); color: var(--risk); background: var(--risk-soft); }
+    .chip[data-tone="warn"] { border-color: var(--warn); color: var(--warn); background: var(--warn-soft); }
+    .chip[data-tone="accent"] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+    /* highlights: numbered orientation list */
+    .highlight-list { display: grid; margin-top: 6px; border-top: 1px solid var(--line); }
+    .highlight-card {
+      display: grid;
+      grid-template-columns: 62px minmax(0, 1fr);
+      gap: 18px;
+      min-width: 0;
+      padding: 20px 2px;
+      border-bottom: 1px solid var(--line);
+    }
+    .highlight-num { font: 700 34px/1 var(--font-serif); color: var(--line-strong); font-variant-numeric: tabular-nums; }
+    .highlight-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; min-width: 0; }
+    .highlight-card h3 { min-width: 0; font: 700 19px/1.35 var(--font-serif); overflow-wrap: anywhere; }
+    .highlight-summary { margin-top: 7px; color: var(--copy); font-size: 14px; overflow-wrap: anywhere; }
+    .highlight-basis { margin-top: 9px; color: var(--muted); font: 11px/1.45 var(--font-mono); overflow-wrap: anywhere; }
+    .highlight-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .highlight-link { max-width: 100%; color: var(--accent); font: 11px/1.4 var(--font-mono); overflow-wrap: anywhere; text-decoration: none; }
+    a.highlight-link:hover { text-decoration: underline; }
+
+    /* groups: categorical map */
+    .change-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 12px; margin-top: 16px; }
+    .change-group { min-width: 0; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); }
+    .group-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; min-width: 0; }
+    .change-group h3 { min-width: 0; font: 700 18px/1.35 var(--font-serif); overflow-wrap: anywhere; }
+    .group-category { flex: 0 1 auto; color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+    .change-group p { margin-top: 7px; color: var(--copy); font-size: 14px; }
+    .group-basis { margin-top: 10px; color: var(--muted); font: 11px/1.45 var(--font-mono); overflow-wrap: anywhere; }
+    .group-files { display: grid; gap: 5px; margin-top: 13px; }
+    .group-file { display: block; max-width: 100%; color: var(--accent); font: 11px/1.45 var(--font-mono); overflow-wrap: anywhere; text-decoration: none; }
+    a.group-file:hover { text-decoration: underline; }
+
+    /* files */
+    .file-list { display: grid; gap: 10px; margin-top: 16px; }
+    .file-row {
+      display: grid;
+      grid-template-columns: minmax(180px, 1.2fr) minmax(0, 2fr) minmax(150px, auto);
+      gap: 16px;
+      align-items: start;
+      min-width: 0;
+      padding: 15px 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+    }
+    .file-main, .file-description { min-width: 0; }
+    .file-path { display: block; max-width: 100%; color: var(--accent); font: 12px/1.5 var(--font-mono); overflow-wrap: anywhere; text-decoration: none; }
+    a.file-path:hover { text-decoration: underline; }
+    .file-old { display: block; margin-top: 5px; color: var(--muted); font: 10px/1.45 var(--font-mono); overflow-wrap: anywhere; }
+    .file-summary { color: var(--copy); overflow-wrap: anywhere; }
+    .file-hunks { margin-top: 9px; color: var(--accent); font-size: 12px; }
+    .file-hunks summary { width: max-content; cursor: pointer; }
+    .hunk-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .hunk-link { max-width: 100%; color: var(--accent); font: 11px/1.4 var(--font-mono); overflow-wrap: anywhere; }
+    .file-side { display: flex; flex-direction: column; align-items: flex-end; gap: 9px; min-width: 0; }
+    .file-chips { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+    .stat-chip { font-variant-numeric: tabular-nums; }
+    .file-bar { display: flex; width: 76px; height: 5px; border-radius: 3px; background: var(--panel); overflow: hidden; }
+    .file-bar i { display: block; height: 100%; }
+    .file-bar .add { background: var(--good); }
+    .file-bar .del { background: var(--risk); }
+
+    /* checks */
+    .check-list { display: grid; gap: 8px; margin-top: 16px; }
+    .check-row {
+      display: grid;
+      grid-template-columns: 10px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+      min-width: 0;
+      padding: 13px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+    }
+    .check-dot { width: 8px; height: 8px; margin-top: 7px; border-radius: 50%; background: var(--line-strong); }
+    .check-dot[data-tone="good"] { background: var(--good); }
+    .check-dot[data-tone="risk"] { background: var(--risk); }
+    .check-dot[data-tone="warn"] { background: var(--warn); }
+    .check-name { font-weight: 700; }
+    .check-summary { color: var(--copy); font-size: 13.5px; overflow-wrap: anywhere; }
+    .check-command { margin-top: 4px; color: var(--muted); font: 11px/1.45 var(--font-mono); overflow-wrap: anywhere; }
+
+    .empty-state { padding: 22px 4px; color: var(--muted); font-size: 14px; }
+    .footer { margin-top: 56px; color: var(--muted); font: 11px/1.6 var(--font-mono); overflow-wrap: anywhere; }
+
+    .no-js .layout { display: none; }
+    .noscript-message { width: min(680px, calc(100% - 40px)); margin: 80px auto; padding: 24px; border: 1px solid var(--line); background: var(--paper); }
+
+    /* ---------- responsive ---------- */
+
+    @media (max-width: 1080px) {
+      .layout { grid-template-columns: 1fr; gap: 0; padding-top: 20px; }
+      .rail-inner { position: static; flex-direction: row; align-items: center; justify-content: space-between; max-height: none; gap: 16px; padding-bottom: 14px; }
+      .rail-nav { display: none; }
+      .rail-foot { border-top: 0; padding-top: 0; }
+    }
+
+    @media (max-width: 760px) {
+      .layout { width: min(100% - 28px, 1180px); }
+      .summary-panel { grid-template-columns: 1fr; gap: 18px; padding: 18px; }
+      .summary-meta { padding-left: 0; padding-top: 18px; border-top: 1px solid var(--line); border-left: 0; }
+      .before-after { grid-template-columns: 1fr; }
+      .revision-cell + .revision-cell { border-top: 1px solid var(--line); border-left: 0; }
+      .stat-strip { flex-wrap: wrap; gap: 18px; }
+      .stat-bar { margin-left: 0; width: 100%; }
+      .section-head { display: block; }
+      .section-note { margin: 7px 0 0; text-align: left; }
+      .highlight-card { grid-template-columns: 1fr; gap: 6px; }
+      .highlight-num { font-size: 24px; }
+      .file-row { grid-template-columns: 1fr; gap: 10px; }
+      .file-side { align-items: flex-start; }
+      .file-chips { justify-content: flex-start; }
+      .check-row { grid-template-columns: 10px minmax(0, 1fr); }
+      .check-row > .chip { grid-column: 2; justify-self: start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+
+    @media print {
+      @page { margin: 14mm; }
+      :root { color-scheme: light; --bg: #fff; --paper: #fff; --panel: #f5f5f5; --ink: #000; --copy: #222; --muted: #555; --line: #ccc; --shadow: none; }
+      body { background: #fff; }
+      .layout { grid-template-columns: 1fr; width: 100%; padding: 0; }
+      .rail { display: none; }
+      .summary-panel, .file-row, .change-group, .check-row, .highlight-card { break-inside: avoid; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#content">跳到报告内容</a>
+  <div class="layout">
+    <aside class="rail" aria-label="报告导航">
+      <div class="rail-inner">
+        <div class="brand"><span class="brand-mark">CR</span><span id="brand-label">Change report</span></div>
+        <nav class="rail-nav" id="rail-nav" aria-label="章节"></nav>
+        <div class="rail-foot">
+          <div class="theme-group" id="theme-group" role="group" aria-label="主题"></div>
+        </div>
+      </div>
+    </aside>
+
+    <main id="content">
+      <section class="hero" id="overview">
+        <div class="hero-eyebrow"><span id="hero-kicker">Change report</span><span aria-hidden="true">·</span><span id="hero-generated"></span></div>
+        <h1 id="report-title"></h1>
+        <div class="target-row">
+          <a class="target" id="report-target"></a>
+          <a class="target-diff" id="report-diff" hidden></a>
+        </div>
+        <div class="summary-panel">
+          <div>
+            <div class="summary-purpose-block" id="summary-purpose-block" hidden>
+              <div class="eyebrow" id="purpose-label"></div>
+              <p class="summary-purpose" id="summary-purpose"></p>
+              <span class="summary-purpose-source" id="summary-purpose-source"></span>
+            </div>
+            <div class="eyebrow" id="summary-label"></div>
+            <p class="summary-headline" id="summary-headline"></p>
+            <p class="summary-details" id="summary-details"></p>
+            <div class="before-after" id="before-after" hidden>
+              <div class="change-state"><div class="eyebrow" id="before-label"></div><p id="summary-before"></p></div>
+              <div class="change-state"><div class="eyebrow" id="after-label"></div><p id="summary-after"></p></div>
+            </div>
+            <div id="flow-block" hidden>
+              <div class="eyebrow" id="flow-label"></div>
+              <ol class="summary-flow" id="summary-flow"></ol>
+            </div>
+          </div>
+          <div class="summary-meta" id="summary-meta"></div>
+        </div>
+        <div class="revision" id="revision"></div>
+        <div class="stat-strip" id="stat-strip"></div>
+        <div class="excluded" id="excluded" hidden></div>
+      </section>
+
+      <section class="section" id="highlights-section" aria-labelledby="highlights-title" hidden>
+        <div class="section-head"><span class="section-index">01</span><h2 id="highlights-title"></h2><span class="section-note" id="highlights-note"></span></div>
+        <div class="highlight-list" id="highlight-list"></div>
+      </section>
+
+      <section class="section" id="groups-section" aria-labelledby="groups-title">
+        <div class="section-head"><span class="section-index">02</span><h2 id="groups-title"></h2><span class="section-note" id="groups-note"></span></div>
+        <div class="change-groups" id="change-groups"></div>
+      </section>
+
+      <section class="section" id="files-section" aria-labelledby="files-title">
+        <div class="section-head"><span class="section-index">03</span><h2 id="files-title"></h2><span class="section-note" id="files-note"></span></div>
+        <div class="file-list" id="file-list"></div>
+      </section>
+
+      <section class="section" id="checks-section" aria-labelledby="checks-title" hidden>
+        <div class="section-head"><span class="section-index">04</span><h2 id="checks-title"></h2><span class="section-note" id="checks-note"></span></div>
+        <div class="check-list" id="check-list"></div>
+      </section>
+
+      <footer class="footer" id="footer"></footer>
+    </main>
+  </div>
+
+  <noscript><div class="noscript-message">This standalone report embeds its data and needs local JavaScript to render. No network access is used.</div></noscript>
+
+  <script type="application/json" id="report-data">__CHANGE_REPORT_DATA__</script>
+  <script>
+    (() => {
+      "use strict";
+
+      document.documentElement.classList.remove("no-js");
+      const data = JSON.parse(document.getElementById("report-data").textContent || "{}");
+      const locale = data.locale === "en" ? "en" : "zh-CN";
+      document.documentElement.lang = locale;
+
+      const translations = {
+        "zh-CN": {
+          brand: "变更报告",
+          kicker: "Change report",
+          summary: "改动摘要",
+          purpose: "目的 / 背景",
+          purposeSource: "目的来源",
+          completeDiff: "打开完整 Diff",
+          before: "改动前",
+          after: "改动后",
+          flow: "变化路径",
+          repository: "仓库",
+          scope: "范围",
+          source: "来源",
+          generatedAt: "生成时间",
+          base: "基线",
+          head: "目标",
+          revisionStatus: "版本状态",
+          observed: "已核验",
+          notVerified: "未核验",
+          files: "文件",
+          additions: "新增行",
+          deletions: "删除行",
+          nav: { overview: "概览", highlights: "关键变化", groups: "改动概览", files: "文件变更", checks: "关联检查" },
+          groups: "改动概览",
+          groupsNote: "按变更区域归类",
+          categories: { behavior: "行为", adapter: "适配器", runtime: "运行时", contract: "契约", verification: "验证", test: "测试", docs: "文档", tooling: "工程", other: "其他" },
+          noGroups: "未提供分组信息。",
+          highlights: "关键变化",
+          highlightsNote: "按理解价值挑选，不代表风险排序",
+          basis: "依据",
+          hunks: "查看 Hunk / 定位",
+          changedFiles: "文件变更",
+          filesNote: "逐文件列出状态、行数和摘要",
+          checks: "关联检查",
+          checksNote: "仅展示已提供的事实记录",
+          excluded: "排除范围",
+          noFiles: "当前范围没有可展示的文件变更。",
+          status: { added: "新增", modified: "修改", deleted: "删除", renamed: "重命名", copied: "复制", untracked: "未跟踪", unknown: "未知" },
+          checkStatus: { passed: "通过", failed: "失败", not_run: "未运行", not_verified: "未核验" },
+          oldPath: "原路径",
+          generated: "生成于",
+          theme: { auto: "自动", light: "浅色", dark: "深色" }
+        },
+        en: {
+          brand: "Change report",
+          kicker: "Change report",
+          summary: "Change summary",
+          purpose: "Purpose / context",
+          purposeSource: "Purpose source",
+          completeDiff: "Open full diff",
+          before: "Before",
+          after: "After",
+          flow: "Change path",
+          repository: "Repository",
+          scope: "Scope",
+          source: "Source",
+          generatedAt: "Generated",
+          base: "Base",
+          head: "Head",
+          revisionStatus: "Revision status",
+          observed: "Observed",
+          notVerified: "Not verified",
+          files: "Files",
+          additions: "Added lines",
+          deletions: "Deleted lines",
+          nav: { overview: "Overview", highlights: "Key changes", groups: "Change overview", files: "Files", checks: "Checks" },
+          groups: "Change overview",
+          groupsNote: "Grouped by change area",
+          categories: { behavior: "Behavior", adapter: "Adapter", runtime: "Runtime", contract: "Contract", verification: "Verification", test: "Tests", docs: "Docs", tooling: "Tooling", other: "Other" },
+          noGroups: "No change groups were provided.",
+          highlights: "Key changes",
+          highlightsNote: "Selected for understanding, not risk ranking",
+          basis: "Basis",
+          hunks: "View hunks / anchors",
+          changedFiles: "Changed files",
+          filesNote: "Status, line counts, and summary per file",
+          checks: "Related checks",
+          checksNote: "Factual records supplied with the report",
+          excluded: "Excluded scope",
+          noFiles: "No file changes are available for this scope.",
+          status: { added: "Added", modified: "Modified", deleted: "Deleted", renamed: "Renamed", copied: "Copied", untracked: "Untracked", unknown: "Unknown" },
+          checkStatus: { passed: "Passed", failed: "Failed", not_run: "Not run", not_verified: "Not verified" },
+          oldPath: "Old path",
+          generated: "Generated",
+          theme: { auto: "Auto", light: "Light", dark: "Dark" }
+        }
+      };
+      const t = translations[locale] || translations.en;
+
+      const byId = (id) => document.getElementById(id);
+      const make = (tag, className, text) => {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined && text !== null) node.textContent = String(text);
+        return node;
+      };
+      const setText = (id, value) => { byId(id).textContent = value || ""; };
+      const formatNumber = (value) => new Intl.NumberFormat(locale === "zh-CN" ? "zh-CN" : "en-US").format(value);
+      const formatTime = (value) => {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return String(value || "");
+        return new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(date);
+      };
+      const statusLabel = (status) => t.status[status] || status;
+      const checkStatusLabel = (status) => t.checkStatus[status] || status;
+      const categoryLabel = (category) => t.categories[category] || category;
+      const toneFor = (status) => status === "passed" || status === "added" ? "good" : status === "failed" || status === "deleted" ? "risk" : status === "not_run" || status === "not_verified" || status === "unknown" ? "warn" : "accent";
+      const addLink = (parent, label, href, className) => {
+        const node = make(href ? "a" : "span", className, label);
+        if (href) { node.href = href; node.rel = "noreferrer"; }
+        parent.append(node);
+        return node;
+      };
+      const dot = (tone) => { const d = make("span", "dot"); if (tone) d.dataset.tone = tone; return d; };
+
+      /* ---------- header / summary ---------- */
+
+      function renderHeader() {
+        document.title = data.report.title;
+        setText("brand-label", t.brand);
+        setText("hero-kicker", t.kicker);
+        setText("hero-generated", `${t.generatedAt} ${formatTime(data.report.generatedAt)}`);
+        setText("report-title", data.report.title);
+
+        const target = byId("report-target");
+        if (data.report.url) {
+          target.href = data.report.url;
+          target.rel = "noreferrer";
+          target.textContent = data.report.repository || data.report.url;
+        } else {
+          target.removeAttribute("href");
+          target.textContent = data.report.repository || "";
+        }
+        const diff = byId("report-diff");
+        if (data.report.diffUrl) {
+          diff.hidden = false;
+          diff.href = data.report.diffUrl;
+          diff.rel = "noreferrer";
+          diff.textContent = t.completeDiff;
+        }
+
+        if (data.summary.purpose) {
+          byId("summary-purpose-block").hidden = false;
+          setText("purpose-label", t.purpose);
+          setText("summary-purpose", data.summary.purpose);
+          if (data.summary.purposeSource) setText("summary-purpose-source", `${t.purposeSource} · ${data.summary.purposeSource}`);
+          else byId("summary-purpose-source").hidden = true;
+        }
+        setText("summary-label", t.summary);
+        setText("summary-headline", data.summary.headline);
+        setText("summary-details", data.summary.details);
+        if (!data.summary.details) byId("summary-details").hidden = true;
+        if (data.summary.before || data.summary.after) {
+          byId("before-after").hidden = false;
+          setText("before-label", t.before);
+          setText("after-label", t.after);
+          setText("summary-before", data.summary.before);
+          setText("summary-after", data.summary.after);
+        }
+        if (data.summary.flow.length) {
+          byId("flow-block").hidden = false;
+          setText("flow-label", t.flow);
+          data.summary.flow.forEach((step) => byId("summary-flow").append(make("li", "", step)));
+        }
+
+        const meta = byId("summary-meta");
+        [[t.repository, data.report.repository], [t.scope, data.report.scope], [t.source, data.report.source], [t.generatedAt, formatTime(data.report.generatedAt)]].forEach(([label, value]) => {
+          const row = make("div", "meta-row");
+          row.append(make("span", "meta-label", label), make("div", "meta-value", value));
+          meta.append(row);
+        });
+
+        const revision = byId("revision");
+        const observed = data.revision.status === "observed";
+        [[t.base, data.revision.base], [t.head, data.revision.head]].forEach(([label, value]) => {
+          const cell = make("div", "revision-cell");
+          const val = make("div", "revision-value");
+          val.append(make("strong", "", value));
+          cell.append(make("span", "meta-label", label), val);
+          revision.append(cell);
+        });
+        const statusCell = make("div", "revision-cell");
+        const statusVal = make("div", "revision-value");
+        statusVal.append(dot(observed ? "good" : "warn"), make("span", "", observed ? t.observed : t.notVerified));
+        statusCell.append(make("span", "meta-label", t.revisionStatus), statusVal);
+        revision.append(statusCell);
+
+        if (data.report.excluded.length) {
+          const excluded = byId("excluded");
+          excluded.hidden = false;
+          excluded.append(make("strong", "", t.excluded));
+          const list = make("ul");
+          data.report.excluded.forEach((item) => list.append(make("li", "", item)));
+          excluded.append(list);
+        }
+      }
+
+      /* ---------- stat strip ---------- */
+
+      function renderStatStrip() {
+        const strip = byId("stat-strip");
+        const cells = [
+          [data.stats.files, t.files, ""],
+          [`+${formatNumber(data.stats.additions)}`, t.additions, "add"],
+          [`−${formatNumber(data.stats.deletions)}`, t.deletions, "del"]
+        ];
+        cells.forEach(([value, label, tone]) => {
+          const stat = make("div", "stat");
+          stat.append(make("span", `stat-num ${tone}`.trim(), value), make("span", "stat-lab", label));
+          strip.append(stat);
+        });
+        const total = data.stats.additions + data.stats.deletions;
+        const bar = make("div", "stat-bar");
+        bar.setAttribute("role", "img");
+        bar.setAttribute("aria-label", `${t.additions} ${formatNumber(data.stats.additions)} / ${t.deletions} ${formatNumber(data.stats.deletions)}`);
+        const add = make("i", "add");
+        const del = make("i", "del");
+        add.style.width = total ? `${(data.stats.additions / total) * 100}%` : "0%";
+        del.style.width = total ? `${(data.stats.deletions / total) * 100}%` : "0%";
+        bar.append(add, del);
+        strip.append(bar);
+      }
+
+      /* ---------- highlights ---------- */
+
+      function renderHighlights() {
+        if (!data.highlights.length) return;
+        const section = byId("highlights-section");
+        section.hidden = false;
+        setText("highlights-title", t.highlights);
+        setText("highlights-note", t.highlightsNote);
+        data.highlights.forEach((highlight, index) => {
+          const card = make("article", "highlight-card");
+          card.append(make("span", "highlight-num", String(index + 1).padStart(2, "0")));
+          const body = make("div", "");
+          const heading = make("div", "highlight-heading");
+          heading.append(make("h3", "", highlight.title));
+          const category = make("span", "chip", categoryLabel(highlight.category));
+          category.dataset.tone = "accent";
+          heading.append(category);
+          body.append(heading, make("p", "highlight-summary", highlight.summary));
+          if (highlight.basis) body.append(make("p", "highlight-basis", `${t.basis} · ${highlight.basis}`));
+          const links = make("div", "highlight-links");
+          highlight.files.forEach((file) => addLink(links, file.label, file.href, "highlight-link"));
+          highlight.hunks.forEach((hunk) => addLink(links, hunk.label, hunk.href, "highlight-link"));
+          if (links.childNodes.length) body.append(links);
+          card.append(body);
+          byId("highlight-list").append(card);
+        });
+      }
+
+      /* ---------- groups ---------- */
+
+      function renderGroups() {
+        setText("groups-title", t.groups);
+        setText("groups-note", t.groupsNote);
+        const container = byId("change-groups");
+        if (!data.groups.length) {
+          container.append(make("p", "empty-state", t.noGroups));
+          return;
+        }
+        data.groups.forEach((group) => {
+          const card = make("article", "change-group");
+          const heading = make("div", "group-heading");
+          heading.append(make("h3", "", group.title));
+          const category = make("span", "chip group-category", categoryLabel(group.category));
+          category.dataset.tone = "accent";
+          heading.append(category);
+          card.append(heading);
+          if (group.summary) card.append(make("p", "", group.summary));
+          if (group.basis) card.append(make("p", "group-basis", `${t.basis} · ${group.basis}`));
+          if (group.files.length) {
+            const files = make("div", "group-files");
+            group.files.forEach((file) => addLink(files, file.label, file.href, "group-file"));
+            card.append(files);
+          }
+          container.append(card);
+        });
+      }
+
+      /* ---------- files ---------- */
+
+      function renderFiles() {
+        setText("files-title", t.changedFiles);
+        setText("files-note", t.filesNote);
+        const container = byId("file-list");
+        if (!data.files.length) {
+          container.append(make("p", "empty-state", t.noFiles));
+          return;
+        }
+        data.files.forEach((file) => {
+          const row = make("article", "file-row");
+          const main = make("div", "file-main");
+          addLink(main, file.path, file.href, "file-path");
+          if (file.oldPath) main.append(make("span", "file-old", `${t.oldPath} · ${file.oldPath}`));
+
+          const description = make("div", "file-description");
+          description.append(make("p", "file-summary", file.summary));
+          if (file.hunks && file.hunks.length) {
+            const hunkDetails = make("details", "file-hunks");
+            hunkDetails.append(make("summary", "", t.hunks));
+            const hunkLinks = make("div", "hunk-links");
+            file.hunks.forEach((hunk) => addLink(hunkLinks, hunk.label, hunk.href, "hunk-link"));
+            hunkDetails.append(hunkLinks);
+            description.append(hunkDetails);
+          }
+
+          const side = make("div", "file-side");
+          const chips = make("div", "file-chips");
+          const status = make("span", "chip", statusLabel(file.status));
+          status.dataset.tone = toneFor(file.status);
+          chips.append(status);
+          if (file.area) chips.append(make("span", "chip", file.area));
+          chips.append(make("span", "chip stat-chip", `+${formatNumber(file.additions)} / −${formatNumber(file.deletions)}`));
+          side.append(chips);
+
+          const total = file.additions + file.deletions;
+          if (total) {
+            const bar = make("div", "file-bar");
+            const add = make("i", "add");
+            const del = make("i", "del");
+            add.style.width = `${(file.additions / total) * 100}%`;
+            del.style.width = `${(file.deletions / total) * 100}%`;
+            bar.append(add, del);
+            side.append(bar);
+          }
+          row.append(main, description, side);
+          container.append(row);
+        });
+      }
+
+      /* ---------- checks ---------- */
+
+      function renderChecks() {
+        if (!data.checks.length) return;
+        const section = byId("checks-section");
+        section.hidden = false;
+        setText("checks-title", t.checks);
+        setText("checks-note", t.checksNote);
+        data.checks.forEach((check) => {
+          const row = make("div", "check-row");
+          const dotEl = make("span", "check-dot");
+          dotEl.dataset.tone = toneFor(check.status);
+          const body = make("div", "");
+          body.append(make("div", "check-name", check.name), make("div", "check-summary", check.summary));
+          if (check.command) body.append(make("div", "check-command", check.command));
+          let statusNode = make(check.href ? "a" : "span", "chip", checkStatusLabel(check.status));
+          statusNode.dataset.tone = toneFor(check.status);
+          if (check.href) { statusNode.href = check.href; statusNode.rel = "noreferrer"; }
+          row.append(dotEl, body, statusNode);
+          byId("check-list").append(row);
+        });
+      }
+
+      function renderFooter() {
+        setText("footer", `${t.generated} ${formatTime(data.report.generatedAt)} · ${data.report.repository || ""}`);
+      }
+
+      /* ---------- rail nav + scrollspy ---------- */
+
+      function buildNav() {
+        const entries = [
+          ["overview", t.nav.overview, 0],
+          ["highlights-section", t.nav.highlights, data.highlights.length],
+          ["groups-section", t.nav.groups, data.groups.length],
+          ["files-section", t.nav.files, data.files.length],
+          ["checks-section", t.nav.checks, data.checks.length]
+        ];
+        const nav = byId("rail-nav");
+        entries.forEach(([id, label, count]) => {
+          const section = document.getElementById(id);
+          if (!section || section.hidden) return;
+          const link = make("a", "rail-link");
+          link.href = `#${id}`;
+          link.append(make("span", "", label));
+          if (count > 0) link.append(make("span", "rail-count", String(count)));
+          nav.append(link);
+        });
+
+        const links = new Map();
+        nav.querySelectorAll(".rail-link").forEach((link) => links.set(link.getAttribute("href").slice(1), link));
+        if (!("IntersectionObserver" in window)) return;
+        const observer = new IntersectionObserver((observed) => {
+          observed.forEach((entry) => {
+            const link = links.get(entry.target.id);
+            if (!link || !entry.isIntersecting) return;
+            nav.querySelectorAll(".rail-link.active").forEach((active) => active.classList.remove("active"));
+            link.classList.add("active");
+          });
+        }, { rootMargin: "-15% 0px -70% 0px" });
+        links.forEach((_, id) => {
+          const section = document.getElementById(id);
+          if (section) observer.observe(section);
+        });
+      }
+
+      /* ---------- theme: auto / light / dark, persisted ---------- */
+
+      function setupTheme() {
+        const KEY = "change-report-theme";
+        const modes = ["auto", "light", "dark"];
+        const root = document.documentElement;
+        let mode = "auto";
+        try { mode = localStorage.getItem(KEY) || "auto"; } catch (e) { /* storage unavailable */ }
+        if (!modes.includes(mode)) mode = "auto";
+        const group = byId("theme-group");
+        const buttons = modes.map((value) => {
+          const button = make("button", "", t.theme[value]);
+          button.type = "button";
+          button.addEventListener("click", () => apply(value));
+          group.append(button);
+          return [value, button];
+        });
+        function apply(next) {
+          if (next === "auto") root.removeAttribute("data-theme");
+          else root.dataset.theme = next;
+          try { localStorage.setItem(KEY, next); } catch (e) { /* storage unavailable */ }
+          buttons.forEach(([value, button]) => button.setAttribute("aria-pressed", String(value === next)));
+        }
+        apply(mode);
+      }
+
+      renderHeader();
+      renderStatStrip();
+      renderHighlights();
+      renderGroups();
+      renderFiles();
+      renderChecks();
+      renderFooter();
+      buildNav();
+      setupTheme();
+    })();
+  </script>
+</body>
+</html>
