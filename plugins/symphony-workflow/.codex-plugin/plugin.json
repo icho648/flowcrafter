@@ -1,6 +1,6 @@
 {
   "name": "symphony-workflow",
-  "version": "1.2.0+codex.20260804102121",
+  "version": "1.2.1",
   "description": "Repo-local Agent Harness auditing, minimal Issue planning, and PR autopilot for reliable Agent workflows.",
   "author": {
     "name": "icho648",
