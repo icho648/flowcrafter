@@ -1,6 +1,6 @@
 {
   "name": "symphony-workflow",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Repo-local Agent Harness auditing, minimal Issue planning, and PR autopilot for reliable Agent workflows.",
   "author": {
     "name": "icho648",
@@ -28,7 +28,7 @@
   "interface": {
     "displayName": "Symphony Workflow",
     "shortDescription": "Agent Harness audits, minimal Issue planning, and PR automation.",
-    "longDescription": "Audit repo-local Agent guidance, evidence, checks, and drift; shape broad intents into minimal linked Issues; and keep Pull Requests merge-ready through conflict, review, and CI handling.",
+    "longDescription": "Audit repo-local Agent guidance, evidence, checks, and drift; shape broad intents into minimal linked Issues; and keep Pull Requests merge-ready within Issue-authorized scope while deferring non-blocking review hardening.",
     "developerName": "icho648",
     "category": "Productivity",
     "capabilities": [],
@@ -36,7 +36,7 @@
       "Use $harness-audit to audit this repository's Agent Harness.",
       "Use $intent-to-issues to decide whether a broad goal needs decomposition.",
       "Use $intent-to-issues after confirmation to prepare GitHub Issues.",
-      "Use $autopilot to keep the current Pull Request merge-ready by handling conflicts, review threads, and CI failures."
+      "Use $autopilot to keep the current Pull Request merge-ready within its Issue-authorized scope by handling conflicts, blocking review findings, and CI failures."
     ]
   }
 }
