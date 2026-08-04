@@ -139,6 +139,7 @@ def validate_change_data(data: Any) -> dict[str, Any]:
     require_choice(root.get("locale"), "locale", ALLOWED_LOCALES)
 
     report = require_object(root.get("report"), "report.report")
+    report.setdefault("excluded", [])
     for key in ("title", "scope", "source", "generatedAt"):
         require_string(report.get(key), f"report.report.{key}")
     require_string(report.get("repository", ""), "report.report.repository", allow_empty=True)
@@ -153,6 +154,7 @@ def validate_change_data(data: Any) -> dict[str, Any]:
     require_string(revision.get("head"), "report.revision.head", allow_empty=allow_empty_revision)
 
     summary = require_object(root.get("summary"), "report.summary")
+    summary.setdefault("flow", [])
     require_string(summary.get("purpose", ""), "report.summary.purpose", allow_empty=True)
     require_string(summary.get("purposeSource", ""), "report.summary.purposeSource", allow_empty=True)
     require_string(summary.get("before", ""), "report.summary.before", allow_empty=True)
@@ -165,16 +167,36 @@ def validate_change_data(data: Any) -> dict[str, Any]:
     for key in ("files", "additions", "deletions"):
         require_nonnegative_int(stats.get(key), f"report.stats.{key}")
 
-    for index, highlight in enumerate(require_list(root.get("highlights", []), "report.highlights", maximum=5)):
+    root.setdefault("highlights", [])
+    root.setdefault("groups", [])
+    root.setdefault("checks", [])
+    highlights = require_list(root["highlights"], "report.highlights", maximum=5)
+    for index, highlight in enumerate(highlights):
+        highlight = require_object(highlight, f"report.highlights[{index}]")
+        highlight.setdefault("files", [])
+        highlight.setdefault("hunks", [])
         validate_highlight(highlight, f"report.highlights[{index}]")
 
-    for index, item in enumerate(require_list(root.get("files"), "report.files", maximum=2000)):
+    files = require_list(root.get("files"), "report.files", maximum=2000)
+    for index, item in enumerate(files):
+        item = require_object(item, f"report.files[{index}]")
+        item.setdefault("hunks", [])
         validate_file(item, f"report.files[{index}]")
+    if stats["files"] != len(files):
+        raise ContractError("report.stats.files must equal the report.files length")
+    if stats["additions"] != sum(item["additions"] for item in files):
+        raise ContractError("report.stats.additions must equal the file additions total")
+    if stats["deletions"] != sum(item["deletions"] for item in files):
+        raise ContractError("report.stats.deletions must equal the file deletions total")
 
-    for index, group in enumerate(require_list(root.get("groups", []), "report.groups", maximum=100)):
+    groups = require_list(root["groups"], "report.groups", maximum=100)
+    for index, group in enumerate(groups):
+        group = require_object(group, f"report.groups[{index}]")
+        group.setdefault("files", [])
         validate_group(group, f"report.groups[{index}]")
 
-    for index, check in enumerate(require_list(root.get("checks", []), "report.checks", maximum=100)):
+    checks = require_list(root["checks"], "report.checks", maximum=100)
+    for index, check in enumerate(checks):
         validate_check(check, f"report.checks[{index}]")
 
     return root
@@ -289,6 +311,14 @@ def run_self_test() -> None:
     unverified = json.loads(json.dumps(data))
     unverified["revision"] = {"base": "", "head": "", "status": "not_verified"}
     validate_change_data(unverified)
+    stale_stats = json.loads(json.dumps(data))
+    stale_stats["stats"]["files"] += 1
+    try:
+        validate_change_data(stale_stats)
+    except ContractError:
+        pass
+    else:
+        raise ContractError("stale aggregate statistics were accepted")
     for href in ("javascript:alert(1)", "data:text/html,unsafe"):
         try:
             validate_href(href, "selfTest.href")
@@ -304,6 +334,12 @@ def run_self_test() -> None:
         without_hunks = json.loads(json.dumps(data))
         del without_hunks["highlights"][0]["hunks"]
         render(validate_change_data(without_hunks), Path(directory) / "report-without-hunks.html")
+        without_optional_arrays = json.loads(json.dumps(data))
+        for key in ("highlights", "groups", "checks"):
+            del without_optional_arrays[key]
+        del without_optional_arrays["report"]["excluded"]
+        del without_optional_arrays["summary"]["flow"]
+        render(validate_change_data(without_optional_arrays), Path(directory) / "report-without-optional-arrays.html")
         html = output.read_text(encoding="utf-8")
         if "</script><script>alert(1)</script>" in html:
             raise ContractError("unsafe script terminator was not escaped")

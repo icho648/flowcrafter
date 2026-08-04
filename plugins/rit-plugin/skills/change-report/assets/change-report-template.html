@@ -466,14 +466,14 @@
   </style>
 </head>
 <body>
-  <a class="skip-link" href="#content">跳到报告内容</a>
+  <a class="skip-link" href="#content"></a>
   <div class="layout">
-    <aside class="rail" aria-label="报告导航">
+    <aside class="rail" aria-label="">
       <div class="rail-inner">
         <div class="brand"><span class="brand-mark">CR</span><span id="brand-label">Change report</span></div>
-        <nav class="rail-nav" id="rail-nav" aria-label="章节"></nav>
+        <nav class="rail-nav" id="rail-nav" aria-label=""></nav>
         <div class="rail-foot">
-          <div class="theme-group" id="theme-group" role="group" aria-label="主题"></div>
+          <div class="theme-group" id="theme-group" role="group" aria-label=""></div>
         </div>
       </div>
     </aside>
@@ -551,6 +551,10 @@
       const translations = {
         "zh-CN": {
           brand: "变更报告",
+          skipToContent: "跳到报告内容",
+          reportNavigation: "报告导航",
+          sectionNavigation: "章节",
+          themeLabel: "主题",
           kicker: "Change report",
           summary: "改动摘要",
           purpose: "目的 / 背景",
@@ -594,6 +598,10 @@
         },
         en: {
           brand: "Change report",
+          skipToContent: "Skip to report content",
+          reportNavigation: "Report navigation",
+          sectionNavigation: "Sections",
+          themeLabel: "Theme",
           kicker: "Change report",
           summary: "Change summary",
           purpose: "Purpose / context",
@@ -639,6 +647,10 @@
       const t = translations[locale] || translations.en;
 
       const byId = (id) => document.getElementById(id);
+      document.querySelector(".skip-link").textContent = t.skipToContent;
+      document.querySelector(".rail").setAttribute("aria-label", t.reportNavigation);
+      byId("rail-nav").setAttribute("aria-label", t.sectionNavigation);
+      byId("theme-group").setAttribute("aria-label", t.themeLabel);
       const make = (tag, className, text) => {
         const node = document.createElement(tag);
         if (className) node.className = className;
@@ -793,7 +805,7 @@
           if (highlight.basis) body.append(make("p", "highlight-basis", `${t.basis} · ${highlight.basis}`));
           const links = make("div", "highlight-links");
           highlight.files.forEach((file) => addLink(links, file.label, file.href, "highlight-link"));
-          highlight.hunks?.forEach((hunk) => addLink(links, hunk.label, hunk.href, "highlight-link"));
+          highlight.hunks.forEach((hunk) => addLink(links, hunk.label, hunk.href, "highlight-link"));
           if (links.childNodes.length) body.append(links);
           card.append(body);
           byId("highlight-list").append(card);
