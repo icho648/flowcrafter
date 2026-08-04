@@ -11,7 +11,8 @@ Requests merge-ready.
 - intent-to-issues — decide whether a broad goal needs decomposition, draft the
   smallest linked Parent/Sub-issue set, and ask before writing to GitHub Issues.
 - autopilot — process the current Pull Request's conflicts, blocking review
-  findings, and CI within its Issue-authorized scope; automatically defer
+  findings, and CI within its Issue-authorized or explicitly derived PR-local
+  scope; automatically defer
   non-blocking hardening instead of chasing every bot comment, and prefix each
   thread reply with its FIX, DEFER, or DISMISS decision while showing each
   comment's context and handling result in chat.

@@ -1,7 +1,7 @@
 interface:
   display_name: "PR 自动驾驶"
-  short_description: "在 Issue 授权范围内收敛 PR Review 与 CI"
-  default_prompt: "使用 $autopilot 在关联 Issue 授权范围内处理当前 PR 的冲突、阻塞性 Review 和 CI，自动延期非阻塞 hardening，直到 merge-ready 或需要一次用户决定。"
+  short_description: "在 Issue 或 PR 本地授权契约范围内收敛 PR Review 与 CI"
+  default_prompt: "使用 $autopilot 在关联 Issue 授权范围或明确建立的 PR 本地契约内处理当前 PR 的冲突、阻塞性 Review 和 CI，自动延期非阻塞 hardening，直到 merge-ready 或需要一次用户决定。"
 
 policy:
   allow_implicit_invocation: false
