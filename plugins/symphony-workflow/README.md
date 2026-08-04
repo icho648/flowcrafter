@@ -13,7 +13,8 @@ Requests merge-ready.
 - autopilot — process the current Pull Request's conflicts, blocking review
   findings, and CI within its Issue-authorized scope; automatically defer
   non-blocking hardening instead of chasing every bot comment, and prefix each
-  thread reply with its FIX, DEFER, or DISMISS decision.
+  thread reply with its FIX, DEFER, or DISMISS decision while showing each
+  comment's context and handling result in chat.
 
 All skills are explicitly invoked so normal implementation or planning work is
 not interrupted by unsolicited audits, Issue writes, or PR automation.

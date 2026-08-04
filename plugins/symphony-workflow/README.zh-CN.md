@@ -11,7 +11,8 @@
   并在写入 GitHub Issues 前征得确认。
 - autopilot：在关联 Issue 授权范围内处理当前 Pull Request 的冲突、阻塞性
   Review 和 CI，自动延期非阻塞 hardening，不追逐每一条 bot 评论；每条
-  thread 回复都以前置的 FIX、DEFER 或 DISMISS 决定开头。
+  thread 回复都以前置的 FIX、DEFER 或 DISMISS 决定开头，并在聊天框显示
+  每条评论的上下文和处理结果。
 
 三个 Skill 都采用显式调用，避免普通实现或规划工作无意触发审计、Issue 写入或
 PR 自动化。
