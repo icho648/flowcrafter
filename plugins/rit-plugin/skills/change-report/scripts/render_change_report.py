@@ -349,6 +349,8 @@ def run_self_test() -> None:
             raise ContractError("data sentinel was not replaced")
         if "@media (prefers-color-scheme: dark)" not in html or "color-scheme: dark" not in html:
             raise ContractError("automatic dark color scheme is missing")
+        if "This standalone report embeds its data" not in html or "此独立报告嵌入数据" not in html:
+            raise ContractError("bilingual no-script fallback is missing")
         if "Review Decision" in html or "review decision" in html or "decisionBoundary" in html:
             raise ContractError("review decision language leaked into the change report")
         if "file-list" not in html or "change-groups" not in html or "summary-purpose" not in html or "group-category" not in html or "highlight-list" not in html or "summary-flow" not in html:
