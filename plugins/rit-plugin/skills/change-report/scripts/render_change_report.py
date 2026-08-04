@@ -9,6 +9,7 @@ import sys
 import tempfile
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 SCHEMA_VERSION = 1
 MAX_INPUT_BYTES = 2_000_000
@@ -18,6 +19,7 @@ ALLOWED_REVISION_STATES = {"observed", "not_verified"}
 ALLOWED_FILE_STATUSES = {"added", "modified", "deleted", "renamed", "copied", "untracked", "unknown"}
 ALLOWED_CHECK_STATUSES = {"passed", "failed", "not_run", "not_verified"}
 ALLOWED_GROUP_CATEGORIES = {"behavior", "adapter", "runtime", "contract", "verification", "test", "docs", "tooling", "other"}
+ALLOWED_HREF_SCHEMES = {"file", "http", "https"}
 
 
 class ContractError(ValueError):
@@ -52,6 +54,20 @@ def require_string_list(value: Any, path: str, *, maximum: int = 100) -> list[st
     return rows
 
 
+def validate_href(value: Any, path: str) -> None:
+    href = require_string(value, path, allow_empty=True)
+    if not href or href.startswith("#"):
+        return
+    parsed = urlsplit(href)
+    scheme = parsed.scheme.lower()
+    if scheme not in ALLOWED_HREF_SCHEMES:
+        raise ContractError(f"{path} must use http(s), file, or a fragment href")
+    if scheme in {"http", "https"} and not parsed.netloc:
+        raise ContractError(f"{path} must include a host for {scheme}")
+    if scheme == "file" and not parsed.path and not parsed.netloc:
+        raise ContractError(f"{path} must include a file path")
+
+
 def require_choice(value: Any, path: str, choices: set[str]) -> str:
     text = require_string(value, path)
     if text not in choices:
@@ -68,7 +84,7 @@ def require_nonnegative_int(value: Any, path: str) -> int:
 def validate_link(value: Any, path: str) -> None:
     link = require_object(value, path)
     require_string(link.get("label"), f"{path}.label")
-    require_string(link.get("href", ""), f"{path}.href", allow_empty=True)
+    validate_href(link.get("href", ""), f"{path}.href")
 
 
 def validate_file(value: Any, path: str) -> None:
@@ -80,7 +96,7 @@ def validate_file(value: Any, path: str) -> None:
     require_nonnegative_int(item.get("additions"), f"{path}.additions")
     require_nonnegative_int(item.get("deletions"), f"{path}.deletions")
     require_string(item.get("summary"), f"{path}.summary")
-    require_string(item.get("href", ""), f"{path}.href", allow_empty=True)
+    validate_href(item.get("href", ""), f"{path}.href")
     for index, hunk in enumerate(require_list(item.get("hunks", []), f"{path}.hunks", maximum=50)):
         validate_link(hunk, f"{path}.hunks[{index}]")
 
@@ -113,7 +129,7 @@ def validate_check(value: Any, path: str) -> None:
     require_choice(check.get("status"), f"{path}.status", ALLOWED_CHECK_STATUSES)
     require_string(check.get("summary"), f"{path}.summary")
     require_string(check.get("command", ""), f"{path}.command", allow_empty=True)
-    require_string(check.get("href", ""), f"{path}.href", allow_empty=True)
+    validate_href(check.get("href", ""), f"{path}.href")
 
 
 def validate_change_data(data: Any) -> dict[str, Any]:
@@ -126,14 +142,15 @@ def validate_change_data(data: Any) -> dict[str, Any]:
     for key in ("title", "scope", "source", "generatedAt"):
         require_string(report.get(key), f"report.report.{key}")
     require_string(report.get("repository", ""), "report.report.repository", allow_empty=True)
-    require_string(report.get("url", ""), "report.report.url", allow_empty=True)
-    require_string(report.get("diffUrl", ""), "report.report.diffUrl", allow_empty=True)
+    validate_href(report.get("url", ""), "report.report.url")
+    validate_href(report.get("diffUrl", ""), "report.report.diffUrl")
     require_string_list(report.get("excluded", []), "report.report.excluded", maximum=100)
 
     revision = require_object(root.get("revision"), "report.revision")
-    require_string(revision.get("base"), "report.revision.base")
-    require_string(revision.get("head"), "report.revision.head")
-    require_choice(revision.get("status"), "report.revision.status", ALLOWED_REVISION_STATES)
+    revision_status = require_choice(revision.get("status"), "report.revision.status", ALLOWED_REVISION_STATES)
+    allow_empty_revision = revision_status == "not_verified"
+    require_string(revision.get("base"), "report.revision.base", allow_empty=allow_empty_revision)
+    require_string(revision.get("head"), "report.revision.head", allow_empty=allow_empty_revision)
 
     summary = require_object(root.get("summary"), "report.summary")
     require_string(summary.get("purpose", ""), "report.summary.purpose", allow_empty=True)
@@ -269,6 +286,18 @@ def sample_data() -> dict[str, Any]:
 
 def run_self_test() -> None:
     data = validate_change_data(sample_data())
+    unverified = json.loads(json.dumps(data))
+    unverified["revision"] = {"base": "", "head": "", "status": "not_verified"}
+    validate_change_data(unverified)
+    for href in ("javascript:alert(1)", "data:text/html,unsafe"):
+        try:
+            validate_href(href, "selfTest.href")
+        except ContractError:
+            pass
+        else:
+            raise ContractError(f"unsafe href was accepted: {href}")
+    for href in ("https://example.invalid/report", "file:///tmp/report.html", "#files-section"):
+        validate_href(href, "selfTest.href")
     with tempfile.TemporaryDirectory(prefix="change-report-") as directory:
         output = Path(directory) / "report.html"
         render(data, output)

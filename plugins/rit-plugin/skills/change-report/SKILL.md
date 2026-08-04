@@ -25,6 +25,8 @@ Describe the selected change set and render only structured data into the bundle
 6. Add optional factual checks only when their command/output is available. Use `not_run` or `not_verified` when appropriate; omit checks that were not requested or observed.
 7. Create the data artifact and render the fixed standalone HTML template.
 
+The bundled renderer is an intentional runtime-free exception: it uses only Python's standard library to validate the nested contract, enforce safe link schemes, escape data for HTML/JavaScript, and replace the template sentinel deterministically. Replacing these checks with manual agent-native edits would remove those guarantees; it adds no third-party, network, or source-project runtime dependency.
+
 ## Build the report
 
 Resolve this skill's directory from the loaded `SKILL.md` path.
@@ -50,7 +52,7 @@ The generated `report.html` is self-contained: embedded data, inline style and s
 
 ## Data contract
 
-Use only plain text and optional links. Never put model-generated HTML in JSON. The complete item shapes are in `references/change-report-data-v1.md`.
+Use only plain text and optional links. Never put model-generated HTML in JSON. Links may be empty, `#fragment`, `http(s)`, or `file:` URLs. The complete item shapes are in `references/change-report-data-v1.md`.
 
 - `report`: title, repository/URL, optional full-Diff URL, scope, exclusions, source, and generation time.
 - `revision`: exact base/head identifiers and whether they were observed.

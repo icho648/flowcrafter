@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "rit-plugin",
-      "description": "Rit's grounded-explanation and evidence-based learning workflows.",
+      "description": "Rit's grounded explanation, evidence-based learning, and deterministic change-report workflows.",
       "source": "./plugins/rit-plugin",
       "category": "productivity",
       "homepage": "https://github.com/icho648/flowcrafter/tree/main/plugins/rit-plugin",
@@ -22,7 +22,10 @@
         "concept",
         "learning",
         "practice",
-        "mastery"
+        "mastery",
+        "change-report",
+        "diff",
+        "html"
       ]
     },
     {
