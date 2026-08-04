@@ -1,7 +1,7 @@
 {
   "name": "rit-plugin",
-  "version": "2.0.0",
-  "description": "Rit's grounded-explanation and evidence-based learning workflows.",
+  "version": "2.1.0",
+  "description": "Rit's grounded explanation, evidence-based learning, and deterministic change-report workflows.",
   "author": {
     "name": "icho648",
     "url": "https://github.com/icho648"
@@ -13,19 +13,23 @@
     "explanation",
     "learning",
     "practice",
-    "mastery"
+    "mastery",
+    "change-report",
+    "diff",
+    "html"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Rit Plugin",
-    "shortDescription": "Rit's explanation and learning workflows.",
-    "longDescription": "Grounded technical explanation and evidence-based long-term learning in one personal workflow bundle.",
+    "shortDescription": "Rit's explanation, learning, and change-report workflows.",
+    "longDescription": "Grounded technical explanation, evidence-based long-term learning, and deterministic standalone HTML change reports in one personal workflow bundle.",
     "developerName": "icho648",
     "category": "Productivity",
     "capabilities": [],
     "defaultPrompt": [
       "Use $grounded-explainer to explain why a concept exists from a concrete scenario, then deepen only as needed.",
-      "Use $learn to build durable capability through evidence-based practice."
+      "Use $learn to build durable capability through evidence-based practice.",
+      "Use $change-report to summarize a selected diff and render a standalone HTML change report."
     ]
   }
 }

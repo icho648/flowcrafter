@@ -1,0 +1,4 @@
+interface:
+  display_name: "Change Report"
+  short_description: "Render a standalone report of changed files and diff scope"
+  default_prompt: "Use $change-report to summarize what changed in the selected diff and render a standalone HTML change report."

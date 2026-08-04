@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "locale": "zh-CN",
+  "report": {
+    "title": "",
+    "repository": "",
+    "url": "",
+    "diffUrl": "",
+    "scope": "",
+    "excluded": [],
+    "source": "",
+    "generatedAt": ""
+  },
+  "revision": {
+    "base": "",
+    "head": "",
+    "status": "not_verified"
+  },
+  "summary": {
+    "purpose": "",
+    "purposeSource": "",
+    "before": "",
+    "after": "",
+    "flow": [],
+    "headline": "",
+    "details": ""
+  },
+  "stats": {
+    "files": 0,
+    "additions": 0,
+    "deletions": 0
+  },
+  "highlights": [],
+  "files": [],
+  "groups": [],
+  "checks": []
+}
