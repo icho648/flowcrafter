@@ -22,7 +22,7 @@ description: >-
 
 以当前 HEAD 和本轮首次读取的 threads 为一个 Review batch：先分类整个 batch 再改代码，已知修复合并为一个提交、一次推送（推送会重启检查，推送前先核对远程分支最新状态）。推送后只做一次 closing refresh，不主动触发新的通用 Review。
 
-硬预算：整个会话中由 Review finding 触发的修复推送最多两次，解决 conflict 与修复 CI 的推送不计入。预算用尽后，新 finding 一律 defer、dismiss 或 escalate，不再为 Review 修改代码或推送。
+硬预算：同一 PR 上由 Review finding 触发的修复推送最多两轮，解决 conflict 与修复 CI 的推送不计入。预算锚定在 PR 而非会话：每轮开始时从 PR 时间线统计带本 Skill 署名的既有 `[FIX]` 回复所引用的不同修复提交数，计入已用预算，跨会话累计。预算用尽后，新 finding 一律 defer、dismiss 或 escalate，不再为 Review 修改代码或推送。
 
 ## 1. Merge conflict
 
