@@ -793,7 +793,7 @@
           if (highlight.basis) body.append(make("p", "highlight-basis", `${t.basis} · ${highlight.basis}`));
           const links = make("div", "highlight-links");
           highlight.files.forEach((file) => addLink(links, file.label, file.href, "highlight-link"));
-          highlight.hunks.forEach((hunk) => addLink(links, hunk.label, hunk.href, "highlight-link"));
+          highlight.hunks?.forEach((hunk) => addLink(links, hunk.label, hunk.href, "highlight-link"));
           if (links.childNodes.length) body.append(links);
           card.append(body);
           byId("highlight-list").append(card);

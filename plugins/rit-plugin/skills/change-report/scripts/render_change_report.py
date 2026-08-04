@@ -301,6 +301,9 @@ def run_self_test() -> None:
     with tempfile.TemporaryDirectory(prefix="change-report-") as directory:
         output = Path(directory) / "report.html"
         render(data, output)
+        without_hunks = json.loads(json.dumps(data))
+        del without_hunks["highlights"][0]["hunks"]
+        render(validate_change_data(without_hunks), Path(directory) / "report-without-hunks.html")
         html = output.read_text(encoding="utf-8")
         if "</script><script>alert(1)</script>" in html:
             raise ContractError("unsafe script terminator was not escaped")

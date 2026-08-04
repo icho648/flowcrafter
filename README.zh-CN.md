@@ -12,7 +12,7 @@
 
 | 插件 | 包含的 Skills | 边界 |
 | --- | --- | --- |
-| [rit-plugin](plugins/rit-plugin/) | `grounded-explainer`、`learn` | Rit 的解释和学习工作流共用一个个人插件包。 |
+| [rit-plugin](plugins/rit-plugin/) | `grounded-explainer`、`learn`、`change-report` | Rit 的解释、学习和确定性变更报告工作流共用一个个人插件包。 |
 | [prd-workflow](plugins/prd-workflow/) | `write-prd`、`implement-prd`、`review-prd-implementation` | 实施对审阅闭环存在硬依赖，因此 PRD Skills 一起安装。 |
 | [symphony-workflow](plugins/symphony-workflow/) | `harness-audit`、`intent-to-issues`、`autopilot` | 项目本地 Agent Harness 审计、最小 Issue 规划与推进 PR 可合并。 |
 
@@ -84,7 +84,8 @@ claude plugin install symphony-workflow@flowcrafter
 │   ├── rit-plugin/
 │   │   └── skills/
 │   │       ├── grounded-explainer/
-│   │       └── learn/
+│   │       ├── learn/
+│   │       └── change-report/
 │   ├── prd-workflow/
 │   │   └── skills/
 │   │       ├── write-prd/

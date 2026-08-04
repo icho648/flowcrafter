@@ -12,7 +12,7 @@ A Claude Code and Codex marketplace for crafted Agent workflows. Add `flowcrafte
 
 | Plugin | Included skills | Boundary |
 | --- | --- | --- |
-| [rit-plugin](plugins/rit-plugin/) | `grounded-explainer`, `learn` | Rit’s explanation and learning workflows share one personal bundle. |
+| [rit-plugin](plugins/rit-plugin/) | `grounded-explainer`, `learn`, `change-report` | Rit’s explanation, learning, and deterministic change-report workflows share one personal bundle. |
 | [prd-workflow](plugins/prd-workflow/) | `write-prd`, `implement-prd`, `review-prd-implementation` | Implementation has a hard dependency on the review loop, so the PRD skills install together. |
 | [symphony-workflow](plugins/symphony-workflow/) | `harness-audit`, `intent-to-issues`, `autopilot` | Repo-local Agent Harness auditing, minimal linked Issue planning, and merge-ready PR automation. |
 
@@ -84,7 +84,8 @@ When installing `implement-prd` manually, also install `review-prd-implementatio
 │   ├── rit-plugin/
 │   │   └── skills/
 │   │       ├── grounded-explainer/
-│   │       └── learn/
+│   │       ├── learn/
+│   │       └── change-report/
 │   ├── prd-workflow/
 │   │   └── skills/
 │   │       ├── write-prd/
