@@ -6,7 +6,7 @@
 
 [English](README.md)
 
-一个托管精心打磨的 Agent 工作流的 Claude Code 与 Codex Marketplace。添加一次 `flowcrafter`，然后按需安装 Rit 的个人工作流插件、PRD 交付插件、Symphony Workflow 插件，或任意组合。
+一个托管精心打磨的 Agent 工作流的 Claude Code、Codex 与 Cursor Marketplace。添加一次 `flowcrafter`，然后按需安装 Rit 的个人工作流插件、PRD 交付插件、Symphony Workflow 插件，或任意组合。
 
 ## 插件
 
@@ -41,6 +41,17 @@ claude plugin install symphony-workflow@flowcrafter
 ```
 
 安装后重启 Claude Code。Claude Code 使用带命名空间的调用，例如 `/rit-plugin:learn` 和 `/prd-workflow:write-prd`；Codex 对同一 Skills 使用 `$learn` 和 `$write-prd`。
+
+### Cursor
+
+Cursor 通过 `.cursor-plugin/marketplace.json` 发现本 Marketplace。把 GitHub 仓库导入为 Team Marketplace，再从 **Customize** 安装插件：
+
+1. 打开 **Cursor Dashboard → Settings → Plugins**。
+2. 在 **Team Marketplaces** 中选择 **Import Marketplace** / **Add Marketplace**。
+3. 粘贴 `https://github.com/icho648/flowcrafter` 并保存。
+4. 在 Cursor 打开 **Customize**，安装 `rit-plugin`、`prd-workflow` 和/或 `symphony-workflow`。
+
+若此前已导入过该 Marketplace，请刷新或更新，以便 Cursor 拉取包含 `symphony-workflow` 的最新提交。
 
 ### 从 `icho648-skills` 迁移
 
@@ -80,6 +91,7 @@ claude plugin install symphony-workflow@flowcrafter
 .
 ├── .claude-plugin/marketplace.json       # Claude Code Marketplace
 ├── .agents/plugins/marketplace.json      # Codex Marketplace
+├── .cursor-plugin/marketplace.json       # Cursor Marketplace
 ├── plugins/
 │   ├── rit-plugin/
 │   │   └── skills/
@@ -101,18 +113,19 @@ claude plugin install symphony-workflow@flowcrafter
 └── AGENTS.md                             # Marketplace 维护策略
 ```
 
-每个插件分别包含 `.claude-plugin/plugin.json` 与 `.codex-plugin/plugin.json`，规范 Agent Skills 位于其 `skills/` 目录。
+每个插件分别包含 `.claude-plugin/plugin.json`、`.codex-plugin/plugin.json` 与 `.cursor-plugin/plugin.json`，规范 Agent Skills 位于其 `skills/` 目录。
 
 ## 兼容模型
 
 - Claude Code Marketplace 与插件清单负责 Claude 分发和命令命名空间。
 - Codex Marketplace 与插件清单负责 Codex 分发和呈现元数据。
+- Cursor Marketplace 与插件清单负责 Cursor Customize / Team Marketplace 分发。
 - 每个 `skills/<name>/` 目录遵循跨客户端 Agent Skills 包结构，也可以绕过插件外壳单独安装。
 
 ## 维护原则
 
 - 把 Plugin 作为安装、版本和依赖边界。
-- 同步维护 Claude Code 与 Codex 的 Marketplace 条目和 manifests。
+- 同步维护 Claude Code、Codex 与 Cursor 的 Marketplace 条目和 manifests。
 - 存在硬依赖的 Skills 放在同一个 Plugin。
 - 英文与简体中文资源对保持语义同步。
 

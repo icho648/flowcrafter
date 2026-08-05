@@ -1,0 +1,27 @@
+{
+  "name": "symphony-workflow",
+  "displayName": "Symphony Workflow",
+  "version": "1.2.1",
+  "description": "Repo-local Agent Harness auditing, minimal Issue planning, and PR autopilot for reliable Agent workflows.",
+  "author": {
+    "name": "icho648"
+  },
+  "homepage": "https://github.com/icho648/flowcrafter/tree/main/plugins/symphony-workflow",
+  "repository": "https://github.com/icho648/flowcrafter",
+  "license": "MIT",
+  "keywords": [
+    "symphony",
+    "agent-workflow",
+    "harness",
+    "documentation",
+    "checks",
+    "drift",
+    "issues",
+    "issue-tracker",
+    "decomposition",
+    "pull-request",
+    "code-review",
+    "ci",
+    "automation"
+  ]
+}
