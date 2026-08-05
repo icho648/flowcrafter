@@ -70,10 +70,16 @@ jobs:
           assert codex_marketplace.is_file(), "missing .agents/plugins/marketplace.json"
           codex_data = json.loads(codex_marketplace.read_text())
           codex_plugins = {p["name"]: p for p in codex_data.get("plugins", [])}
+          cursor_marketplace = root / ".cursor-plugin" / "marketplace.json"
+          assert cursor_marketplace.is_file(), "missing .cursor-plugin/marketplace.json"
+          cursor_data = json.loads(cursor_marketplace.read_text())
+          cursor_plugins = {p["name"]: p for p in cursor_data.get("plugins", [])}
 
           assert "name" in data and data["name"], "marketplace.json missing name"
           assert data["name"] == codex_data.get("name"), \
               f"Claude/Codex marketplace name mismatch: {data['name']} vs {codex_data.get('name')}"
+          assert data["name"] == cursor_data.get("name"), \
+              f"Claude/Cursor marketplace name mismatch: {data['name']} vs {cursor_data.get('name')}"
           assert "plugins" in data and isinstance(data["plugins"], list) and data["plugins"], \
               "marketplace.json must list at least one plugin"
 
@@ -107,6 +113,22 @@ jobs:
                   f"plugin {plug['name']} Codex description mismatch"
               assert cdata.get("skills") == "./skills/", \
                   f"plugin {plug['name']} Codex skills path must be ./skills/"
+              cursor_entry = cursor_plugins.get(plug["name"])
+              assert cursor_entry, f"plugin {plug['name']} missing from Cursor marketplace"
+              assert cursor_entry.get("source") == source, \
+                  f"plugin {plug['name']} Cursor source mismatch"
+              assert cursor_entry.get("description") == plug["description"], \
+                  f"plugin {plug['name']} Cursor marketplace description mismatch"
+              cursor_manifest = plug_dir / ".cursor-plugin" / "plugin.json"
+              assert cursor_manifest.is_file(), \
+                  f"plugin {plug['name']} missing .cursor-plugin/plugin.json"
+              curdata = json.loads(cursor_manifest.read_text())
+              assert curdata.get("name") == plug["name"], \
+                  f"plugin {plug['name']} Cursor manifest name mismatch"
+              assert curdata.get("description") == plug["description"], \
+                  f"plugin {plug['name']} Cursor description mismatch"
+              assert curdata.get("displayName"), \
+                  f"plugin {plug['name']} Cursor manifest missing displayName"
               skills_dir = plug_dir / "skills"
               assert skills_dir.is_dir(), \
                   f"plugin {plug['name']} missing skills/"
@@ -122,6 +144,8 @@ jobs:
           assert len(names) == len(set(names)), f"duplicate plugin names: {names}"
           assert set(names) == set(codex_plugins), \
               f"Claude/Codex marketplace plugin mismatch: {names} vs {list(codex_plugins)}"
+          assert set(names) == set(cursor_plugins), \
+              f"Claude/Cursor marketplace plugin mismatch: {names} vs {list(cursor_plugins)}"
           print(f"marketplace {data['name']} lists {len(names)} plugin(s): {names}")
           PY
 

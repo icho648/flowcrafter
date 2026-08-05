@@ -6,7 +6,7 @@
 
 [简体中文](README.zh-CN.md)
 
-A Claude Code and Codex marketplace for crafted Agent workflows. Add `flowcrafter` once, then install Rit’s personal workflow bundle, the PRD delivery workflow, the Symphony Workflow plugin, or any combination.
+A Claude Code, Codex, and Cursor marketplace for crafted Agent workflows. Add `flowcrafter` once, then install Rit’s personal workflow bundle, the PRD delivery workflow, the Symphony Workflow plugin, or any combination.
 
 ## Plugins
 
@@ -41,6 +41,17 @@ claude plugin install symphony-workflow@flowcrafter
 ```
 
 Restart Claude Code after installation. Claude Code invocations are namespaced, for example `/rit-plugin:learn` and `/prd-workflow:write-prd`; Codex invokes the same skills as `$learn` and `$write-prd`.
+
+### Cursor
+
+Cursor discovers this marketplace through `.cursor-plugin/marketplace.json`. Import the GitHub repository as a Team Marketplace, then install plugins from **Customize**:
+
+1. Open **Cursor Dashboard → Settings → Plugins**.
+2. Under **Team Marketplaces**, choose **Import Marketplace** / **Add Marketplace**.
+3. Paste `https://github.com/icho648/flowcrafter` and save.
+4. Open **Customize** in Cursor and install `rit-plugin`, `prd-workflow`, and/or `symphony-workflow`.
+
+If the marketplace was imported earlier, refresh or update it so Cursor picks up the latest commit (including `symphony-workflow`).
 
 ### Migrate from `icho648-skills`
 
@@ -80,6 +91,7 @@ When installing `implement-prd` manually, also install `review-prd-implementatio
 .
 ├── .claude-plugin/marketplace.json       # Claude Code Marketplace
 ├── .agents/plugins/marketplace.json      # Codex Marketplace
+├── .cursor-plugin/marketplace.json       # Cursor Marketplace
 ├── plugins/
 │   ├── rit-plugin/
 │   │   └── skills/
@@ -101,18 +113,19 @@ When installing `implement-prd` manually, also install `review-prd-implementatio
 └── AGENTS.md                             # Marketplace maintenance policy
 ```
 
-Each plugin has client-specific manifests in `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json`. Its canonical Agent Skills live under `skills/`.
+Each plugin has client-specific manifests in `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, and `.cursor-plugin/plugin.json`. Its canonical Agent Skills live under `skills/`.
 
 ## Compatibility model
 
 - The Claude Code Marketplace and plugin manifests provide Claude distribution and command namespacing.
 - The Codex Marketplace and plugin manifests provide Codex distribution and presentation metadata.
+- The Cursor Marketplace and plugin manifests provide Cursor Customize / Team Marketplace distribution.
 - Every `skills/<name>/` directory follows the cross-client Agent Skills package structure and can also be installed without the plugin wrapper.
 
 ## Maintenance
 
 - Treat a plugin as an install, version, and dependency boundary.
-- Keep the Claude Code and Codex marketplace entries and manifests synchronized.
+- Keep the Claude Code, Codex, and Cursor marketplace entries and manifests synchronized.
 - Keep hard-dependent skills in the same plugin.
 - Keep English and Simplified Chinese resource pairs in semantic lockstep.
 

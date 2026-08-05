@@ -1,0 +1,24 @@
+{
+  "name": "rit-plugin",
+  "displayName": "Rit Plugin",
+  "version": "2.1.0",
+  "description": "Rit's grounded explanation, evidence-based learning, and deterministic change-report workflows.",
+  "author": {
+    "name": "icho648"
+  },
+  "homepage": "https://github.com/icho648/flowcrafter/tree/main/plugins/rit-plugin",
+  "repository": "https://github.com/icho648/flowcrafter",
+  "license": "MIT",
+  "keywords": [
+    "explanation",
+    "education",
+    "mental-model",
+    "concept",
+    "learning",
+    "practice",
+    "mastery",
+    "change-report",
+    "diff",
+    "html"
+  ]
+}

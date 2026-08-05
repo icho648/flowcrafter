@@ -1,0 +1,27 @@
+{
+  "name": "flowcrafter",
+  "owner": {
+    "name": "icho648"
+  },
+  "metadata": {
+    "description": "A Cursor, Claude Code, and Codex marketplace for crafted agent workflows covering explanation, PRD delivery, review, and learning.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "rit-plugin",
+      "source": "./plugins/rit-plugin",
+      "description": "Rit's grounded explanation, evidence-based learning, and deterministic change-report workflows."
+    },
+    {
+      "name": "prd-workflow",
+      "source": "./plugins/prd-workflow",
+      "description": "Author, implement, and review PRDs through one evidence-backed delivery workflow."
+    },
+    {
+      "name": "symphony-workflow",
+      "source": "./plugins/symphony-workflow",
+      "description": "Repo-local Agent Harness auditing, minimal Issue planning, and PR autopilot for reliable Agent workflows."
+    }
+  ]
+}

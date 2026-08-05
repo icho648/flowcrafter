@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Cursor marketplace manifests: `.cursor-plugin/marketplace.json` plus per-plugin `.cursor-plugin/plugin.json` for `rit-plugin`, `prd-workflow`, and `symphony-workflow`, so Customize / Team Marketplace can discover the same plugins.
+- Root README install steps for importing `icho648/flowcrafter` as a Cursor Team Marketplace.
+
+### Changed
+- `validate.yml`, `AGENTS.md`, and bilingual root READMEs now keep Claude Code, Codex, and Cursor marketplace registries synchronized.
+
 ### Removed
 - `setup-agent-guidance` skill and its assets, references, and documentation references from `rit-plugin`.
 
